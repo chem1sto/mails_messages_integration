@@ -15,6 +15,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "channels",
+    "mail_recipient.apps.MailRecipientConfig",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
