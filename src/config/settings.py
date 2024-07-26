@@ -1,5 +1,12 @@
 from pathlib import Path
+import os
+from dotenv import find_dotenv, load_dotenv
 
+dotenv_path = find_dotenv(".env")
+load_dotenv(dotenv_path)
+
+dotenv_db_path = find_dotenv(".env.db")
+load_dotenv(dotenv_db_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,12 +58,36 @@ TEMPLATES = [
 # WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if os.environ.get("DEBUG").lower() == "true":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.getenv(
+                "DB_ENGINE", default="django.db.backends.postgresql"
+            ),
+            "NAME": os.getenv(
+                "DB_NAME", default="default_db_name"
+            ),
+            "USER": os.getenv(
+                "POSTGRES_USER", default="default_db_user"
+            ),
+            "PASSWORD": os.getenv(
+                "POSTGRES_PASSWORD", default="default_db_password"
+            ),
+            "HOST": os.getenv(
+                "DB_HOST", default="localhost"
+            ),
+            "PORT": os.getenv(
+                "DB_PORT", default="5432"
+            )
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
