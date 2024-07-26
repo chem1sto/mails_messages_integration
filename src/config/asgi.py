@@ -14,7 +14,7 @@ application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            mail_recipient.routing.websocket_urlpatterns  # Замените на ваше приложение
+            mail_recipient.routing.websocket_urlpatterns
         )
     ),
 })

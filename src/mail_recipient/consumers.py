@@ -26,7 +26,9 @@ class EmailConsumer(AsyncWebsocketConsumer):
         while True:
             messages = server.search(['UNSEEN'])
             for uid, message_data in server.fetch(messages, 'RFC822').items():
-                email_message = email.message_from_bytes(message_data[b'RFC822'])
+                email_message = email.message_from_bytes(
+                    message_data[b'RFC822']
+                )
                 await self.send(text_data=email_message['Subject'])
             await asyncio.sleep(10)
         server.logout()
