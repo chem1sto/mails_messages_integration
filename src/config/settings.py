@@ -9,9 +9,9 @@ SECRET_KEY = config("SECRET_KEY", default="0123456789")
 
 DEBUG = config("DEBUG", default="True", cast=bool)
 
-ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS", default="127.0.0.1, localhost"
-).split(", ")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost").split(
+    ", "
+)
 
 INSTALLED_APPS = [
     "channels",
@@ -67,12 +67,14 @@ if config("DEBUG", default=True, cast=bool):
 else:
     DATABASES = {
         "default": {
-            "ENGINE": config("DB_ENGINE",
-                             default="django.db.backends.postgresql"),
+            "ENGINE": config(
+                "DB_ENGINE", default="django.db.backends.postgresql"
+            ),
             "NAME": config("DB_NAME", default="default_db_name"),
             "USER": config("POSTGRES_USER", default="default_db_user"),
-            "PASSWORD": config("POSTGRES_PASSWORD",
-                               default="default_db_password"),
+            "PASSWORD": config(
+                "POSTGRES_PASSWORD", default="default_db_password"
+            ),
             "HOST": config("DB_HOST", default="localhost"),
             "PORT": config("DB_PORT", default="5432"),
         }
