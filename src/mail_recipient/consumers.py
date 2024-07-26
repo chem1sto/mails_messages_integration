@@ -1,7 +1,12 @@
 import asyncio
-from channels.generic.websocket import AsyncWebsocketConsumer
-from imapclient import IMAPClient
 import email
+from datetime import datetime
+
+from channels.generic.websocket import AsyncWebsocketConsumer
+from django.utils.timezone import make_aware
+from imapclient import IMAPClient
+
+from mail_recipient.models import Email
 
 
 class EmailConsumer(AsyncWebsocketConsumer):
@@ -17,8 +22,8 @@ class EmailConsumer(AsyncWebsocketConsumer):
 
     async def fetch_emails(self):
         host = 'imap.gmail.com'
-        username = 'your-email@gmail.com'  # Ваш адрес Gmail
-        password = 'your-app-password'  # Пароль приложения, созданный ранее
+        username = 'vladvasiliev52@gmail.com'
+        password = 'adsfdg1324youknow'
         server = IMAPClient(host, use_uid=True, ssl=True)
         server.login(username, password)
         select_info = server.select_folder('INBOX')
@@ -29,6 +34,15 @@ class EmailConsumer(AsyncWebsocketConsumer):
                 email_message = email.message_from_bytes(
                     message_data[b'RFC822']
                 )
-                await self.send(text_data=email_message['Subject'])
-            await asyncio.sleep(10)
+                subject = email_message['Subject']
+                sender = email_message['From']
+                date = make_aware(datetime.strptime(
+                    email_message['Date'], '%a, %d %b %Y %H:%M:%S %z')
+                )
+                body = email_message.get_payload(decode=True).decode()
+                Email.objects.create(
+                    subject=subject, sender=sender, date=date, body=body
+                )
+                await self.send(text_data=subject)
+            await asyncio.sleep(10)  # Проверка новых писем каждые 10 секунд
         server.logout()

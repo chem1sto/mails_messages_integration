@@ -1,23 +1,21 @@
 from pathlib import Path
 import os
-from dotenv import find_dotenv, load_dotenv
+from decouple import config
 
-dotenv_path = find_dotenv(".env")
-load_dotenv(dotenv_path)
-
-dotenv_db_path = find_dotenv(".env.db")
-load_dotenv(dotenv_db_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", default="0123456789")
+SECRET_KEY = config("SECRET_KEY", default="0123456789")
 
-DEBUG = os.getenv("DEBUG", default="True").lower() == "true"
+DEBUG = config("DEBUG", default="True", cast=bool)
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS",
-                          default="127.0.0.1, localhost").split(", ")
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", default="127.0.0.1, localhost"
+).split(", ")
 
 INSTALLED_APPS = [
+    "channels",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -27,7 +25,6 @@ INSTALLED_APPS = [
     "mail_recipient.apps.MailRecipientConfig",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
-    "channels",
 ]
 
 MIDDLEWARE = [
@@ -60,7 +57,7 @@ TEMPLATES = [
 
 ASGI_APPLICATION = "config.asgi.application"
 
-if os.environ.get("DEBUG").lower() == "true":
+if config("DEBUG", default=True, cast=bool):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -70,24 +67,14 @@ if os.environ.get("DEBUG").lower() == "true":
 else:
     DATABASES = {
         "default": {
-            "ENGINE": os.getenv(
-                "DB_ENGINE", default="django.db.backends.postgresql"
-            ),
-            "NAME": os.getenv(
-                "DB_NAME", default="default_db_name"
-            ),
-            "USER": os.getenv(
-                "POSTGRES_USER", default="default_db_user"
-            ),
-            "PASSWORD": os.getenv(
-                "POSTGRES_PASSWORD", default="default_db_password"
-            ),
-            "HOST": os.getenv(
-                "DB_HOST", default="localhost"
-            ),
-            "PORT": os.getenv(
-                "DB_PORT", default="5432"
-            )
+            "ENGINE": config("DB_ENGINE",
+                             default="django.db.backends.postgresql"),
+            "NAME": config("DB_NAME", default="default_db_name"),
+            "USER": config("POSTGRES_USER", default="default_db_user"),
+            "PASSWORD": config("POSTGRES_PASSWORD",
+                               default="default_db_password"),
+            "HOST": config("DB_HOST", default="localhost"),
+            "PORT": config("DB_PORT", default="5432"),
         }
     }
 
@@ -120,5 +107,15 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG

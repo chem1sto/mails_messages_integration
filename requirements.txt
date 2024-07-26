@@ -7,4 +7,4 @@ djangorestframework~=3.14
 flake8~=7.1.0
 imapclient~=3.0.1
 psycopg2==2.9.9
-python-dotenv==1.0.1
+python-decouple==3.8

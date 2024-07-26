@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Email Notifications</title>
+  </head>
+  <body>
+    <h1>Email Notifications</h1>
+    <div id="messages"></div>
+    <script>
+      const ws = new WebSocket('ws://localhost:8000/ws/email/');
+
+      ws.onmessage = function(event) {
+          const messages = document.getElementById('messages');
+          const message = document.createElement('div');
+          message.textContent = event.data;
+          messages.appendChild(message);
+      };
+
+      ws.onclose = function(event) {
+          console.log('WebSocket is closed now.');
+      };
+
+      ws.onerror = function(error) {
+          console.log('WebSocket error: ' + error);
+      };
+    </script>
+    <ul>
+      {% for email in emails %}
+      <li>{{ email.subject }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

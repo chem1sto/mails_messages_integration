@@ -2,7 +2,7 @@ class EmailConfig:
     """
     Настройки для модели Email.
     """
-    SUBJECT_MAX_LENGTH = 255,
+    SUBJECT_MAX_LENGTH = 255
     SUBJECT_VERBOSE_NAME = "Тема сообщения"
     DATE_OF_RECEIPT_VERBOSE_NAME = "Дата получения письма"
     DATE_OF_DISPATCH_VERBOSE_NAME = "Дата отправки письма"
