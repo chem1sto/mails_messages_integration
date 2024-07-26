@@ -1,10 +1,11 @@
+aioimaplib==1.1.0
 black @ git+https://github.com/psf/black@3be19b306f77980349d2c9edece2d86b1f58663d
+celery==5.4.0
 channels~=4.0.0
 channels-redis~=4.1.0
 daphne~=4.0.0
 django==5.0.7
 djangorestframework~=3.14
 flake8~=7.1.0
-imapclient~=3.0.1
-psycopg2==2.9.9
+psycopg2-binary==2.9.3
 python-decouple==3.8

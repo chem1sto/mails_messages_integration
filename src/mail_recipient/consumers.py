@@ -2,9 +2,9 @@ import asyncio
 import email
 from datetime import datetime
 
+from aioimaplib import aioimaplib
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.utils.timezone import make_aware
-from imapclient import IMAPClient
 
 from mail_recipient.models import Email
 
@@ -22,29 +22,41 @@ class EmailConsumer(AsyncWebsocketConsumer):
 
     async def fetch_emails(self):
         host = "imap.gmail.com"
-        username = "vladvasiliev52@gmail.com"
-        password = "adsfdg1324youknow"
-        server = IMAPClient(host, use_uid=True, ssl=True)
-        server.login(username, password)
-        select_info = server.select_folder("INBOX")
-        print("%d messages in INBOX" % select_info["EXISTS"])
-        while True:
-            messages = server.search(["UNSEEN"])
-            for uid, message_data in server.fetch(messages, "RFC822").items():
-                email_message = email.message_from_bytes(
-                    message_data[b"RFC822"]
-                )
-                subject = email_message["Subject"]
-                sender = email_message["From"]
-                date = make_aware(
-                    datetime.strptime(
-                        email_message["Date"], "%a, %d %b %Y %H:%M:%S %z"
+        username = "vladvasiliev52@gmail.com"  # Используйте переменные окружения или секреты Django
+        password = "adsfdg1324youknow"  # Используйте переменные окружения или секреты Django
+
+        try:
+            server = aioimaplib.IMAP4_SSL(host=host)
+            await server.wait_hello_from_server()
+            await server.login(username, password)
+            await server.select("INBOX")
+
+            while True:
+                await server.idle()
+                response = await server.search("UNSEEN")
+                messages = response[1][0].split()
+
+                for msg_id in messages:
+                    response = await server.fetch(msg_id, "(RFC822)")
+                    email_message = email.message_from_bytes(response[1][0][1])
+                    subject = email_message["Subject"]
+                    sender = email_message["From"]
+                    date = make_aware(
+                        datetime.strptime(
+                            email_message["Date"], "%a, %d %b %Y %H:%M:%S %z"
+                        )
                     )
-                )
-                body = email_message.get_payload(decode=True).decode()
-                Email.objects.create(
-                    subject=subject, sender=sender, date=date, body=body
-                )
-                await self.send(text_data=subject)
-            await asyncio.sleep(10)  # Проверка новых писем каждые 10 секунд
-        server.logout()
+                    body = email_message.get_payload(decode=True).decode()
+
+                    Email.objects.create(
+                        subject=subject, sender=sender, date=date, body=body
+                    )
+                    await self.send(text_data=subject)
+
+                await asyncio.sleep(
+                    10
+                )  # Проверка новых писем каждые 10 секунд
+        except Exception as e:
+            logger.error("Error fetching emails: %s", e)
+        finally:
+            await server.logout()

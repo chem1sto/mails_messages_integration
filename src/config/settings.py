@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 from decouple import config
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="0123456789")
@@ -14,17 +13,17 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost").split(
 )
 
 INSTALLED_APPS = [
-    "channels",
     "daphne",
+    "channels",
+    "mail_recipient.apps.MailRecipientConfig",
+    "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "mail_recipient.apps.MailRecipientConfig",
-    "core.apps.CoreConfig",
-    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -55,6 +54,7 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 if config("DEBUG", default=True, cast=bool):
@@ -67,16 +67,14 @@ if config("DEBUG", default=True, cast=bool):
 else:
     DATABASES = {
         "default": {
-            "ENGINE": config(
-                "DB_ENGINE", default="django.db.backends.postgresql"
-            ),
+            "ENGINE": "django.db.backends.postgresql",
             "NAME": config("DB_NAME", default="default_db_name"),
             "USER": config("POSTGRES_USER", default="default_db_user"),
             "PASSWORD": config(
                 "POSTGRES_PASSWORD", default="default_db_password"
             ),
-            "HOST": config("DB_HOST", default="localhost"),
-            "PORT": config("DB_PORT", default="5432"),
+            "HOST": config("DB_HOST", default="db"),
+            "PORT": "5432",
         }
     }
 

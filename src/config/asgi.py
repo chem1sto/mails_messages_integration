@@ -4,15 +4,16 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-import mail_recipient.routing
+from mail_recipient import routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+
 
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
-            URLRouter(mail_recipient.routing.websocket_urlpatterns)
+            URLRouter(routing.websocket_urlpatterns)
         ),
     }
 )
