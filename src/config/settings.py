@@ -10,10 +10,12 @@ load_dotenv(dotenv_db_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-k#gxh1)d9i3-s_n@(a!_%2daykdv%zzej!!zm59$9j9gtg*fkx"
-DEBUG = True
+SECRET_KEY = os.getenv("SECRET_KEY", default="0123456789")
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("DEBUG", default="True").lower() == "true"
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS",
+                          default="127.0.0.1, localhost").split(", ")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -22,9 +24,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "channels",
     "mail_recipient.apps.MailRecipientConfig",
     "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +58,6 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 if os.environ.get("DEBUG").lower() == "true":
@@ -103,6 +105,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
