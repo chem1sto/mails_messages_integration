@@ -1,2 +1,4 @@
 django==5.0.7; python_full_version >= "3.11.1" and python_version < "4.0"
 djangorestframework~=3.14
+channels~=4.0.0
+daphne~=4.0.0
