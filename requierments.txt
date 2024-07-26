@@ -1,0 +1,2 @@
+django==5.0.7; python_full_version >= "3.11.1" and python_version < "4.0"
+djangorestframework~=3.14
