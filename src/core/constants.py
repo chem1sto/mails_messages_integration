@@ -17,8 +17,6 @@ class EmailAccountConfig:
     Настройки для модели EmailAccount.
     """
 
-    USER_VERBOSE_NAME = "Логин почты"
-    USER_HELP_TEXT = "Введите логин от электронной почты"
     EMAIL_VERBOSE_NAME = "Ваша электронная почта"
     EMAIL_HELP_TEXT = "Введите адрес электронной почты"
     PASSWORD_VERBOSE_NAME = "Пароль"

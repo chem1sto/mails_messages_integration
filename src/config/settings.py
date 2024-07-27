@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     "channels",
     "mail_recipient.apps.MailRecipientConfig",
     "core.apps.CoreConfig",
-    "users.apps.UsersConfig",
+    "email_account.apps.UsersConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

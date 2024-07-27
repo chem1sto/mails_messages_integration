@@ -1,16 +1,10 @@
+from django.contrib.auth.hashers import make_password, check_password
 from django.db import models
-from django.contrib.auth.models import User
 
 from core.constants import EmailAccountConfig
 
 
 class EmailAccount(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=EmailAccountConfig.USER_VERBOSE_NAME,
-        help_text=EmailAccountConfig.USER_HELP_TEXT,
-    )
     email = models.EmailField(
         unique=True,
         verbose_name=EmailAccountConfig.EMAIL_VERBOSE_NAME,
