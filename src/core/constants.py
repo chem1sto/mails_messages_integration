@@ -1,8 +1,35 @@
-ERROR_MESSAGES = {
-    "invalid_host": "Введены некорректные данные пользователя",
-    "auth_failed": "Введены некорректные данные пользователя",
-    "generic_error": "Произошла ошибка при подключении к серверу",
-}
+ACTION = "action"
+ALL = "ALL"
+BAD = "BAD"
+AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данные пользователя"
+AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
+EMAIL = "email"
+EMAIL_LIST = "email_list"
+EMAIL_NOT_FOUND = "Электронная почта не найдена"
+EMAIL_REQUIRED = "Требуется электронная почта"
+EMAILS = "emails"
+ERROR = "error"
+FETCH_EMAILS = "fetch_emails"
+FROM = "from"
+INBOX = "INBOX"
+INDEX = "index"
+NO_MESSAGES_TO_PROCESS_LOGGER_INFO = "Нет сообщений для обработки"
+NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE = (
+    "Неожиданная ошибка при получении письма %s: Недостаточно данных"
+)
+MESSAGE = "message"
+OK = "OK"
+PARSING_MAIL_LOGGER_ERROR_MESSAGE = "Ошибка при парсинге письма %s: %s"
+RFC822_FORMAT = "(RFC822)"
+RECEIVE_MAIL_ERROR_MESSAGE = "Ошибка при получении письма %s: %s"
+RESPONSE_TIMED_OUT = "Превышено время ожидания ответа"
+SEARCH_MAILS_ERROR_MESSAGE = "Ошибка при поиске писем"
+SEARCH_MAILS_LOGGER_ERROR_MESSAGE = "Ошибка при поиске писем: %s"
+SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтового ящика"
+SELECT_INBOX_LOGGER_ERROR_MESSAGE = "Ошибка при выборе почтового ящика: %s"
+SUBJECT = "subject"
+TYPE = "type"
+UNSUPPORTED_ACTION = "Неподдерживаемое действие: %s"
 
 
 class EmailConfig:

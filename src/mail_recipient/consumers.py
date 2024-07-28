@@ -5,6 +5,20 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.utils import fetch_emails
 from email_account.models import EmailAccount
+from core.constants import (
+    ACTION,
+    EMAIL,
+    EMAIL_LIST,
+    EMAIL_REQUIRED,
+    EMAIL_NOT_FOUND,
+    EMAILS,
+    ERROR,
+    FETCH_EMAILS,
+    MESSAGE,
+    RESPONSE_TIMED_OUT,
+    TYPE,
+    UNSUPPORTED_ACTION
+)
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):
@@ -30,35 +44,35 @@ class EmailListConsumer(AsyncWebsocketConsumer):
     ) -> Coroutine[Any, Any, None]:
         try:
             text_data_json = json.loads(text_data)
-            action = text_data_json.get("action")
-            if action != "fetch_emails":
-                raise ValueError(f"Неподдерживаемое действие: {action}")
-            email = text_data_json.get("email")
+            action = text_data_json.get(ACTION)
+            if action != FETCH_EMAILS:
+                raise ValueError(UNSUPPORTED_ACTION, action)
+            email = text_data_json.get(EMAIL)
             if not email:
-                raise ValueError("Требуется электронная почта")
+                raise ValueError(EMAIL_REQUIRED)
             email_account = await EmailAccount.objects.filter(
                 email=email
             ).afirst()
             if not email_account:
-                raise ValueError("Электронная почта не найдена")
+                raise ValueError(EMAIL_NOT_FOUND)
             emails = await fetch_emails(email_account)
-            if "error" in emails:
-                raise ValueError(emails["error"])
+            if ERROR in emails:
+                raise ValueError(emails[ERROR])
             return await self.send(
-                text_data=json.dumps({"type": "email_list", "emails": emails})
+                text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: emails})
             )
         except TimeoutError:
             return await self.send(
                 text_data=json.dumps(
                     {
-                        "type": "error",
-                        "message": "Превышено время ожидания ответа",
+                        TYPE: ERROR,
+                        MESSAGE: RESPONSE_TIMED_OUT,
                     }
                 )
             )
         except Exception as e:
             return await self.send(
-                text_data=json.dumps({"type": "error", "message": str(e)})
+                text_data=json.dumps({TYPE: ERROR, MESSAGE: str(e)})
             )
 
     async def disconnect(self, close_code: Any) -> Coroutine[Any, Any, None]:

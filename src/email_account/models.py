@@ -1,7 +1,6 @@
 from django.db import models
 
 from core.constants import EmailAccountConfig
-from django.db.models import UniqueConstraint
 
 
 class EmailAccount(models.Model):

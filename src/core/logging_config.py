@@ -2,17 +2,15 @@ import logging
 from django.conf import settings
 
 
-def setup_aioimaplib_logging():
-    aioimaplib_logger = logging.getLogger("aioimaplib")
-    aioimaplib_logger.setLevel(logging.DEBUG)
-    if "console" in settings.LOGGING["handlers"]:
-        aioimaplib_logger.addHandler(settings.LOGGING["handlers"]["console"])
-    else:
-        aioimaplib_handler = logging.StreamHandler()
-        aioimaplib_handler.setLevel(logging.DEBUG)
-        aioimaplib_formatter = logging.Formatter(
-            "{levelname} {asctime} {message}", style="{"
+def setup_fetch_emails_logging():
+    aioimaplib_logger = logging.getLogger("fetch_emails")
+    aioimaplib_handler = logging.StreamHandler()
+    aioimaplib_handler.setLevel(logging.DEBUG)
+    aioimaplib_handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s %(levelname)s [%(module)s:%(lineno)d] %(message)s"
         )
-        aioimaplib_handler.setFormatter(aioimaplib_formatter)
-        aioimaplib_logger.addHandler(aioimaplib_handler)
+    )
+    aioimaplib_logger.addHandler(aioimaplib_handler)
+    aioimaplib_logger.addHandler(settings.LOGGING["handlers"]["console"])
     return aioimaplib_logger

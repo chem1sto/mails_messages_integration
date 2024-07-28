@@ -125,12 +125,10 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
+            "format": "%(asctime)s %(levelname)s [%(module)s:%(lineno)d] %(message)s",
         },
         "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
+            "format": "%(levelname)s %(message)s",
         },
     },
     "handlers": {
@@ -146,22 +144,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "daphne": {
-            "handlers": ["console"],
-            "level": "WARNING",
-            "propagate": False,
-        },
-        "channels": {
-            "handlers": ["console"],
-            "level": "WARNING",
-            "propagate": False,
-        },
-        "aioimaplib": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
-        },
-        "mail_recipient": {
+        "fetch_emails": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": True,
