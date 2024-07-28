@@ -3,8 +3,6 @@ from typing import Any, Coroutine
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from core.utils import fetch_emails
-from email_account.models import EmailAccount
 from core.constants import (
     ACTION,
     EMAIL,
@@ -17,8 +15,10 @@ from core.constants import (
     MESSAGE,
     RESPONSE_TIMED_OUT,
     TYPE,
-    UNSUPPORTED_ACTION
+    UNSUPPORTED_ACTION,
 )
+from email_account.models import EmailAccount
+from mail_recipient.fetch_emails import fetch_emails
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):
