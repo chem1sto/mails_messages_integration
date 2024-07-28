@@ -1,5 +1,7 @@
 import os
 import aioimaplib
+from email import policy
+from email.parser import BytesParser
 
 
 def email_file_path(instance, filename):
@@ -18,10 +20,8 @@ async def fetch_emails(email_account):
     email_list = []
     for msg_id in messages[1].split():
         status, msg_data = await imap.fetch(msg_id, "(RFC822)")
-        msg = email.message_from_bytes(msg_data[1])
-        subject, encoding = decode_header(msg["Subject"])[0]
-        if isinstance(subject, bytes):
-            subject = subject.decode(encoding or "utf-8")
+        msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
+        subject = msg["Subject"]
         email_list.append({"subject": subject, "from": msg["From"]})
     await imap.logout()
     return email_list
