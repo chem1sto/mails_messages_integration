@@ -1,23 +1,35 @@
 <html>
 <head>
     <title>Email List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
-        ws.onopen = () => {
-            ws.send(JSON.stringify({ action: 'fetch_emails' }));
-        };
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'email_list') {
-                const emails = data.emails;
-                const emailList = document.getElementById('email-list');
-                emails.forEach(email => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>Subject:</strong> ${email.subject}<br><strong>From:</strong> ${email.from}`;
-                    emailList.appendChild(li);
-                });
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            if (email) {
+                const ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
+                ws.onopen = () => {
+                    ws.send(JSON.stringify({ action: 'fetch_emails', email: email }));
+                };
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'email_list') {
+                        const emails = data.emails;
+                        const emailList = $('#email-list');
+                        emailList.empty();
+                        emails.forEach(email => {
+                            const li = $('<li>');
+                            li.html(`<strong>Subject:</strong> ${email.subject}<br><strong>From:</strong> ${email.from}`);
+                            emailList.append(li);
+                        });
+                    } else if (data.type === 'error') {
+                        alert(data.message);
+                    }
+                };
+            } else {
+                alert('Email is required');
             }
-        };
+        });
     </script>
 </head>
 <body>

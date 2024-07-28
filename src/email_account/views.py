@@ -9,16 +9,13 @@ def add_email_account(request):
     if request.method == "POST":
         form = EmailAccountForm(request.POST)
         if form.is_valid():
-            if EmailAccount.objects.filter(
-                    email=form.cleaned_data["email"]).first():
-                return redirect("email_list")
-            else:
-                email_account = form.save(commit=False)
-                email_account.password = make_password(
-                    form.cleaned_data["password"]
-                )
-                email_account.save()
-                return redirect("email_list")
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            email_account, created = EmailAccount.objects.get_or_create(
+                email=email)
+            email_account.password = make_password(password)
+            email_account.save()
+            return redirect(f"/email_list/?email={email}")
     else:
         form = EmailAccountForm()
     return render(request, "add_email_account.html", {"form": form})
