@@ -31,14 +31,14 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 'message': 'Требуется электронная почта'
             }))
         email_account = await EmailAccount.objects.filter(email=email).afirst()
-        if email_account:
+        if not email_account:
+            return await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Электронная почта не найдена'
+            }))
+        else:
             emails = await fetch_emails(email_account)
             return await self.send(text_data=json.dumps({
                 'type': 'email_list',
                 'emails': emails
-            }))
-        else:
-            return await self.send(text_data=json.dumps({
-                'type': 'error',
-                'message': 'Электронная почта не найдена'
             }))
