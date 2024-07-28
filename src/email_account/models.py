@@ -14,11 +14,3 @@ class EmailAccount(models.Model):
         verbose_name=EmailAccountConfig.PASSWORD_VERBOSE_NAME,
         help_text=EmailAccountConfig.PASSWORD_HELP_TEXT,
     )
-
-    class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=[EmailAccountConfig.EMAIL, EmailAccountConfig.PASSWORD],
-                name=EmailAccountConfig.UNIQUE_EMAIL_PASSWORD_NAME,
-            )
-        ]

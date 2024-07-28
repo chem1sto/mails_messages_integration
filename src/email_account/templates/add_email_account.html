@@ -17,5 +17,12 @@
         </p>
         <button type="submit">Сохранить</button>
     </form>
+    {% if form.errors %}
+    <div class="error">
+        {% for field, errors in form.errors.items %}
+            <p>{{ field }}: {{ errors|join:", " }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 </html>

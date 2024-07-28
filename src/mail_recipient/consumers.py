@@ -9,7 +9,8 @@ from email_account.models import EmailAccount
 
 class EmailListConsumer(AsyncWebsocketConsumer):
     """
-    WebSocket consumer для обработки запросов, связанных с электронной почтой.
+    Асинхронный WebSocket consumer для обработки запросов, связанных с
+    электронной почтой.
 
     Этот consumer подключается к WebSocket, принимает сообщения от клиентов,
     обрабатывает запросы на получение списка электронных писем и отправляет
@@ -27,44 +28,38 @@ class EmailListConsumer(AsyncWebsocketConsumer):
     async def receive(
         self, text_data: Any = None, bytes_data: Any = None
     ) -> Coroutine[Any, Any, None]:
-        text_data_json = json.loads(text_data)
-        action = text_data_json.get("action")
-        if action != "fetch_emails":
+        try:
+            text_data_json = json.loads(text_data)
+            action = text_data_json.get("action")
+            if action != "fetch_emails":
+                raise ValueError(f"Неподдерживаемое действие: {action}")
+            email = text_data_json.get("email")
+            if not email:
+                raise ValueError("Требуется электронная почта")
+            email_account = await EmailAccount.objects.filter(
+                email=email
+            ).afirst()
+            if not email_account:
+                raise ValueError("Электронная почта не найдена")
+            emails = await fetch_emails(email_account)
+            if "error" in emails:
+                raise ValueError(emails["error"])
+            return await self.send(
+                text_data=json.dumps({"type": "email_list", "emails": emails})
+            )
+        except TimeoutError:
             return await self.send(
                 text_data=json.dumps(
                     {
                         "type": "error",
-                        "message": f"Неподдерживаемое действие: {action}",
+                        "message": "Превышено время ожидания ответа",
                     }
                 )
             )
-        email = text_data_json.get("email")
-        if not email:
+        except Exception as e:
             return await self.send(
-                text_data=json.dumps(
-                    {"type": "error", "message": "Требуется электронная почта"}
-                )
+                text_data=json.dumps({"type": "error", "message": str(e)})
             )
-        email_account = await EmailAccount.objects.filter(email=email).afirst()
-        if not email_account:
-            return await self.send(
-                text_data=json.dumps(
-                    {
-                        "type": "error",
-                        "message": "Электронная почта не найдена",
-                    }
-                )
-            )
-        emails = await fetch_emails(email_account)
-        if "error" in emails:
-            return await self.send(
-                text_data=json.dumps(
-                    {"type": "error", "message": emails["error"]}
-                )
-            )
-        return await self.send(
-            text_data=json.dumps({"type": "email_list", "emails": emails})
-        )
 
     async def disconnect(self, close_code: Any) -> Coroutine[Any, Any, None]:
         pass
