@@ -8,6 +8,18 @@ from email_account.models import EmailAccount
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):
+    """
+    WebSocket consumer для обработки запросов, связанных с электронной почтой.
+
+    Этот consumer подключается к WebSocket, принимает сообщения от клиентов,
+    обрабатывает запросы на получение списка электронных писем и отправляет
+    результаты обратно клиенту.
+
+    Основные методы:
+    - connect: Принимает WebSocket-соединение.
+    - disconnect: Закрывает WebSocket-соединение.
+    - receive: Обрабатывает входящие сообщения от клиента.
+    """
     async def connect(self) -> Coroutine[Any, Any, None]:
         return await self.accept()
 
