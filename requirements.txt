@@ -1,5 +1,5 @@
 aioimaplib==1.1.0
-black @ git+https://github.com/psf/black@3be19b306f77980349d2c9edece2d86b1f58663d
+black @ git+https://github.com/psf/black
 celery==5.4.0
 channels~=4.0.0
 channels-redis~=4.1.0
