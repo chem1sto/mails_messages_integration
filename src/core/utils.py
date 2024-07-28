@@ -1,7 +1,9 @@
 import os
-import aioimaplib
 from email import policy
 from email.parser import BytesParser
+from typing import Any, Coroutine
+
+import aioimaplib
 
 
 def email_file_path(instance, filename):
@@ -9,12 +11,17 @@ def email_file_path(instance, filename):
     return os.path.join("email_files", instance.subject[:50], filename)
 
 
-async def fetch_emails(email_account):
+async def fetch_emails(
+    email_account: Any,
+) -> Coroutine[Any, Any, list[dict[str, Any]]]:
     """Подключение к почтовому серверу и получение электронных писем."""
     imap_server = "imap.gmail.com"
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
-    await imap.wait_hello_from_server()
-    await imap.login(email_account.email, email_account.password)
+    try:
+        await imap.wait_hello_from_server()
+        await imap.login(email_account.email, email_account.password)
+    except aioimaplib.Error as e:
+        return {"error": str(e)}
     await imap.select("INBOX")
     status, messages = await imap.search("ALL")
     email_list = []

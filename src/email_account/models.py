@@ -19,5 +19,6 @@ class EmailAccount(models.Model):
         constraints = [
             UniqueConstraint(
                 fields=[EmailAccountConfig.EMAIL, EmailAccountConfig.PASSWORD],
-                name=EmailAccountConfig.UNIQUE_EMAIL_PASSWORD_NAME)
+                name=EmailAccountConfig.UNIQUE_EMAIL_PASSWORD_NAME,
+            )
         ]

@@ -5,29 +5,31 @@
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const email = urlParams.get('email');
+            const email = urlParams.get("email");
             if (email) {
                 const ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
                 ws.onopen = () => {
-                    ws.send(JSON.stringify({ action: 'fetch_emails', email: email }));
+                    ws.send(JSON.stringify({ action: "fetch_emails", email: email }));
                 };
                 ws.onmessage = (event) => {
                     const data = JSON.parse(event.data);
-                    if (data.type === 'email_list') {
+                    if (data.type === "email_list") {
                         const emails = data.emails;
-                        const emailList = $('#email-list');
+                        const emailList = $("#email-list");
                         emailList.empty();
                         emails.forEach(email => {
-                            const li = $('<li>');
+                            const li = $("<li>");
                             li.html(`<strong>Subject:</strong> ${email.subject}<br><strong>From:</strong> ${email.from}`);
                             emailList.append(li);
                         });
-                    } else if (data.type === 'error') {
+                    } else if (data.type === "error") {
                         alert(data.message);
+                        window.location.href = '/?error=' + encodeURIComponent(data.message);
                     }
                 };
             } else {
-                alert('Требуется электронная почта');
+                alert("Требуется электронная почта");
+                window.location.href = "/";
             }
         });
     </script>

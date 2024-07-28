@@ -12,7 +12,8 @@ def add_email_account(request):
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             email_account, created = EmailAccount.objects.get_or_create(
-                email=email)
+                email=email
+            )
             email_account.password = make_password(password)
             email_account.save()
             return redirect(f"/email_list/?email={email}")
