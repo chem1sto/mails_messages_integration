@@ -2,7 +2,6 @@ class EmailConfig:
     """
     Настройки для модели Email.
     """
-
     SUBJECT_MAX_LENGTH = 255
     SUBJECT_VERBOSE_NAME = "Тема сообщения"
     DATE_OF_RECEIPT_VERBOSE_NAME = "Дата получения письма"
@@ -16,8 +15,11 @@ class EmailAccountConfig:
     """
     Настройки для модели EmailAccount.
     """
-
-    EMAIL_VERBOSE_NAME = "Ваша электронная почта"
+    EMAIL = "email"
+    EMAIL_VERBOSE_NAME = "Электронная почта"
     EMAIL_HELP_TEXT = "Введите адрес электронной почты"
+    PASSWORD = "password"
+    PASSWORD_MAX_LENGTH = 128
     PASSWORD_VERBOSE_NAME = "Пароль"
     PASSWORD_HELP_TEXT = "Введите пароль от электронной почты"
+    UNIQUE_EMAIL_PASSWORD_NAME = "unique_email_password"

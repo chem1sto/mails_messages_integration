@@ -7,5 +7,5 @@ class EmailAccountForm(forms.ModelForm):
         model = EmailAccount
         fields = ["email", "password"]
         widgets = {
-            'password': forms.PasswordInput(),
+            "password": forms.PasswordInput(),
         }

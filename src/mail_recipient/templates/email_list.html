@@ -1,33 +1,27 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Email Notifications</title>
-  </head>
-  <body>
-    <h1>Email Notifications</h1>
-    <div id="messages"></div>
+<head>
+    <title>Email List</title>
     <script>
-      const ws = new WebSocket('ws://localhost:8000/ws/email/');
-
-      ws.onmessage = function(event) {
-          const messages = document.getElementById('messages');
-          const message = document.createElement('div');
-          message.textContent = event.data;
-          messages.appendChild(message);
-      };
-
-      ws.onclose = function(event) {
-          console.log('WebSocket is closed now.');
-      };
-
-      ws.onerror = function(error) {
-          console.log('WebSocket error: ' + error);
-      };
+        const ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ action: 'fetch_emails' }));
+        };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'email_list') {
+                const emails = data.emails;
+                const emailList = document.getElementById('email-list');
+                emails.forEach(email => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Subject:</strong> ${email.subject}<br><strong>From:</strong> ${email.from}`;
+                    emailList.appendChild(li);
+                });
+            }
+        };
     </script>
-    <ul>
-      {% for email in emails %}
-      <li>{{ email.subject }}</li>
-      {% endfor %}
-    </ul>
-  </body>
+</head>
+<body>
+    <h1>Email List</h1>
+    <ul id="email-list"></ul>
+</body>
 </html>

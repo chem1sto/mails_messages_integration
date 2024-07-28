@@ -11,6 +11,13 @@ services:
     networks:
       - backend
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
   backend:
     build: .
     env_file: .env
@@ -18,6 +25,7 @@ services:
       - static:/app/static
     depends_on:
       - db
+      - redis
     command: >
       bash -c "python manage.py makemigrations
       && python manage.py migrate
