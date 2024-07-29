@@ -30,6 +30,7 @@ NO_MESSAGES_TO_PROCESS_LOGGER_INFO = "Нет сообщений для обра�
 NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE = (
     "Неожиданная ошибка при получении письма %s: Недостаточно данных"
 )
+MAIL_FROM = "mail_from"
 MESSAGE = "message"
 MULTIPART = "multipart"
 NO_EMAIL_ERROR_MESSAGE = "Требуется электронная почта"
@@ -38,6 +39,12 @@ PARSING_MAIL_LOGGER_ERROR_MESSAGE = "Ошибка при парсинге пис
 RFC822_FORMAT = "(RFC822)"
 RECEIVE_MAIL_ERROR_MESSAGE = "Ошибка при получении письма %s: %s"
 RECEIVED = "received"
+SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS = (
+    "Вложение %s для письма с message_id %s успешно сохранено."
+)
+SAVE_EMAIL_TO_DB_SUCCESS = (
+    "Электронное письмо с message_id %s успешно сохранено."
+)
 SEARCH_MAILS_ERROR_MESSAGE = "Ошибка при поиске писем"
 SEARCH_MAILS_LOGGER_ERROR_MESSAGE = "Ошибка при поиске писем: %s"
 SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтового ящика"

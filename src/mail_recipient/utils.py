@@ -1,10 +1,24 @@
+import logging
 from os import remove
 
 from asgiref.sync import sync_to_async
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-from core.constants import CONTENT, FILENAME
+
+from core.constants import (
+    CONTENT,
+    DATE,
+    FILENAME,
+    MAIL_FROM,
+    RECEIVED,
+    SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
+    SAVE_EMAIL_TO_DB_SUCCESS,
+    SUBJECT,
+    TEXT,
+)
 from mail_recipient.models import Email
+
+save_email_to_db_logger = logging.getLogger("save_email_to_db")
 
 
 async def save_email_to_db(email: Email, attachments: list):
@@ -12,12 +26,12 @@ async def save_email_to_db(email: Email, attachments: list):
     email_instance, created = await Email.objects.aget_or_create(
         message_id=email.message_id,
         defaults={
-            "subject": email.subject,
-            "mail_from": email.mail_from,
-            "date": email.date,
-            "received": email.received,
-            "text": email.text,
-        }
+            SUBJECT: email.subject,
+            MAIL_FROM: email.mail_from,
+            DATE: email.date,
+            RECEIVED: email.received,
+            TEXT: email.text,
+        },
     )
     if not created:
         email_instance.message_id = email.message_id
@@ -32,6 +46,7 @@ async def save_email_to_db(email: Email, attachments: list):
             using=None,
             update_fields=None,
         )
+    save_email_to_db_logger.info(SAVE_EMAIL_TO_DB_SUCCESS, email.message_id)
     for attachment in attachments:
         filename = attachment[FILENAME]
         content = attachment[CONTENT]
@@ -42,4 +57,9 @@ async def save_email_to_db(email: Email, attachments: list):
                 await sync_to_async(email_instance.attachments.save)(
                     filename, File(f)
                 )
+            save_email_to_db_logger.info(
+                SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
+                filename,
+                email.message_id,
+            )
         remove(temp_file.name)

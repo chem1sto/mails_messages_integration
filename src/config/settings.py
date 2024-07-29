@@ -154,5 +154,10 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
+        "save_email_to_db": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
+        }
     },
 }
