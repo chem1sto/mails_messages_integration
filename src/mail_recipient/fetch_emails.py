@@ -74,7 +74,7 @@ async def fetch_emails(
         )
         return {ERROR: SEARCH_MAILS_ERROR_MESSAGE}
     email_list = []
-    for msg_id in search_result[1][0].split()[:10]:
+    for msg_id in search_result[1][0].split()[:100]:
         status, msg_data = await imap.fetch(msg_id.decode(), RFC822_FORMAT)
         if msg_id == b"":
             fetch_emails_logger.info(NO_MESSAGES_TO_PROCESS_LOGGER_INFO)
@@ -118,8 +118,11 @@ async def fetch_emails(
                     FROM: mail_from,
                     DATE: serialize_datetime(date),
                     RECEIVED: serialize_datetime(received),
-                    TEXT: text,
-                    ATTACHMENTS: attachments,
+                    TEXT: text[:1000],
+                    # ATTACHMENTS: [
+                    #     {"filename": a["filename"], "url": a["url"]}
+                    #     for a in attachments
+                    # ],
                 }
             )
         except IndexError as e:

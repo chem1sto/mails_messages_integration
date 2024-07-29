@@ -1,6 +1,7 @@
 ACTION = "action"
 ALL = "ALL"
 ATTACHMENTS = "attachments"
+ATTACHMENTS_MAX_LENGTH = 150
 BAD = "BAD"
 AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данные пользователя"
 AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
@@ -70,7 +71,7 @@ class EmailConfig:
     MAIL_FROM_VERBOSE_NAME = "Отправитель"
     DATE_VERBOSE_NAME = "Дата получения письма"
     RECEIVED_VERBOSE_NAME = "Дата отправки письма"
-    TEXT_MAX_LENGTH = 5000
+    TEXT_MAX_LENGTH = 100
     TEXT_VERBOSE_NAME = "Описание или текст письма"
     ATTACHMENTS_VERBOSE_NAME = "Вложения"
 

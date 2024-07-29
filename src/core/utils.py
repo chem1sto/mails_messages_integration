@@ -4,7 +4,7 @@ from email.message import Message
 from typing import Any
 
 from core.constants import (
-    ATTACHMENTS,
+    ATTACHMENTS_MAX_LENGTH,
     CONTENT,
     CONTENT_DISPOSITION,
     FILENAME,
@@ -16,8 +16,10 @@ from core.constants import (
 
 
 def attachments_file_path(instance, filename: str) -> str | bytes:
-    """Формирование пути загрузки файла, включая оригинальное название."""
-    return os.path.join(ATTACHMENTS, instance.subject[:50], filename)
+    """Формирование пути и названия для загружаемого файла из вложений."""
+    return os.path.join(
+        instance.subject[:ATTACHMENTS_MAX_LENGTH], filename
+    )
 
 
 def get_attachments_from_message(message: Message) -> list[dict[str, Any]]:

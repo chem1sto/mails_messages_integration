@@ -118,5 +118,5 @@ migrations/
 # static
 static/
 
-# media
-media/
+# attachments
+attachments/
