@@ -65,6 +65,7 @@ class EmailConfig:
     Настройки для модели Email.
     """
 
+    MESSAGE_ID_MAX_LENGTH = 255
     SUBJECT_MAX_LENGTH = 255
     SUBJECT_VERBOSE_NAME = "Тема сообщения"
     MAIL_FROM_MAX_LENGTH = 255
@@ -73,6 +74,7 @@ class EmailConfig:
     RECEIVED_VERBOSE_NAME = "Дата отправки письма"
     TEXT_MAX_LENGTH = 100
     TEXT_VERBOSE_NAME = "Описание или текст письма"
+    ATTACHMENTS_MAX_LENGTH = 150
     ATTACHMENTS_VERBOSE_NAME = "Вложения"
 
 

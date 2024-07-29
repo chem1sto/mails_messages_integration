@@ -3,10 +3,11 @@ from django.db import models
 from core.constants import EmailConfig
 from core.utils import attachments_file_path
 
-from core.constants import ATTACHMENTS_MAX_LENGTH
-
 
 class Email(models.Model):
+    message_id = models.CharField(
+        max_length=EmailConfig.MESSAGE_ID_MAX_LENGTH, unique=True
+    )
     subject = models.CharField(
         max_length=EmailConfig.SUBJECT_MAX_LENGTH,
         verbose_name=EmailConfig.SUBJECT_VERBOSE_NAME,
@@ -35,7 +36,7 @@ class Email(models.Model):
     )
     attachments = models.FileField(
         upload_to=attachments_file_path,
-        max_length=ATTACHMENTS_MAX_LENGTH,
+        max_length=EmailConfig.ATTACHMENTS_MAX_LENGTH,
         verbose_name=EmailConfig.ATTACHMENTS_VERBOSE_NAME,
         null=True,
         blank=True,

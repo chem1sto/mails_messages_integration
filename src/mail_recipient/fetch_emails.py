@@ -92,6 +92,7 @@ async def fetch_emails(
         try:
             msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
             attachments = get_attachments_from_message(msg)
+            message_id = msg["Message-ID"]
             subject = msg[SUBJECT.title()]
             mail_from = msg[FROM.title()]
             date = datetime.strptime(
@@ -104,6 +105,7 @@ async def fetch_emails(
             text = get_text_from_message(msg)
             await save_email_to_db(
                 Email(
+                    message_id=message_id,
                     subject=subject,
                     mail_from=mail_from,
                     date=date,

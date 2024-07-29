@@ -17,9 +17,7 @@ from core.constants import (
 
 def attachments_file_path(instance, filename: str) -> str | bytes:
     """Формирование пути и названия для загружаемого файла из вложений."""
-    return os.path.join(
-        instance.subject[:ATTACHMENTS_MAX_LENGTH], filename
-    )
+    return os.path.join(instance.subject[:ATTACHMENTS_MAX_LENGTH], filename)
 
 
 def get_attachments_from_message(message: Message) -> list[dict[str, Any]]:
