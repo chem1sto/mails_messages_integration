@@ -111,8 +111,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-MEDIA_URL = "/attachments/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "attachments")
+ATTACHMENTS_URL = "/attachments/"
+ATTACHMENTS_ROOT = os.path.join(BASE_DIR, "attachments")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -158,6 +158,6 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
-        }
+        },
     },
 }

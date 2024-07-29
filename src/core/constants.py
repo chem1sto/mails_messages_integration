@@ -1,5 +1,6 @@
 ACTION = "action"
 ALL = "ALL"
+ATTACHMENT_PATH = "http://{host}:{port}/attachments/{subfolder}/{filename}"
 ATTACHMENTS = "attachments"
 ATTACHMENTS_MAX_LENGTH = 150
 BAD = "BAD"
@@ -7,14 +8,17 @@ AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данны�
 AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
 CONTENT = "content"
 CONTENT_DISPOSITION = "Content-Disposition"
+CURRENT_GMT = 3
 DATE = "date"
+DATETIME_FORMAT = "%a, %d %b %Y %H:%M:%S %z"
 EMAIL = "email"
 EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE = "Электронная почта не найдена"
 EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE = (
     "Электронная почта в не найдена: %s"
 )
-EMAIL_LOGGER_ERROR_MESSAGE = "Ошибка при получении письма: %s"
 EMAIL_LIST = "email_list"
+EMAIL_LIST_HTML = "email_list.html"
+EMAIL_LOGGER_ERROR_MESSAGE = "Ошибка при получении письма: %s"
 EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная почта"
 EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
     "Нет электронной почты в text_data_json: %s"
@@ -22,6 +26,8 @@ EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
 EMAILS = "emails"
 ERROR = "error"
 FETCH_EMAILS = "fetch_emails"
+FETCH_EMAILS_COMPLETE = "Получение писем закончено %s"
+FILE_NOT_FOUND = "File not found"
 FILENAME = "filename"
 FROM = "from"
 INBOX = "INBOX"
@@ -32,6 +38,7 @@ NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE = (
 )
 MAIL_FROM = "mail_from"
 MESSAGE = "message"
+MESSAGE_ID = "Message-ID"
 MULTIPART = "multipart"
 NO_EMAIL_ERROR_MESSAGE = "Требуется электронная почта"
 OK = "OK"
@@ -48,9 +55,11 @@ SAVE_EMAIL_TO_DB_SUCCESS = (
 )
 SEARCH_MAILS_ERROR_MESSAGE = "Ошибка при поиске писем"
 SEARCH_MAILS_LOGGER_ERROR_MESSAGE = "Ошибка при поиске писем: %s"
+SERVER = "server"
 SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтового ящика"
 SELECT_INBOX_LOGGER_ERROR_MESSAGE = "Ошибка при выборе почтового ящика: %s"
 SERIALIZE_DATETIME_ERROR_MESSAGE = "Переданные данные нельзя сериализовать."
+SRC = "src"
 SUBJECT = "subject"
 TEXT = "text"
 TEXT_PLANE = "text/plain"
@@ -66,6 +75,7 @@ UNSUPPORTED_ACTION_ERROR_MESSAGE = "Неподдерживаемое дейст�
 UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE = (
     "Передано неподдерживаемое действие: %s"
 )
+URL = "url"
 
 
 class EmailConfig:

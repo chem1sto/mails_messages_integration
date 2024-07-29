@@ -1,7 +1,7 @@
 from email import policy
 from email.parser import BytesParser
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timedelta
 import aioimaplib
 
 from core.constants import (
@@ -10,11 +10,16 @@ from core.constants import (
     BAD,
     AUTH_FAILED_ERROR_MESSAGE,
     AUTH_FAILED_LOGGER_ERROR_MESSAGE,
+    CURRENT_GMT,
     DATE,
+    DATETIME_FORMAT,
     ERROR,
+    FETCH_EMAILS_COMPLETE,
+    FILENAME,
     FROM,
     INBOX,
     INDEX,
+    MESSAGE_ID,
     NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE,
     NO_MESSAGES_TO_PROCESS_LOGGER_INFO,
     OK,
@@ -28,6 +33,7 @@ from core.constants import (
     SELECT_INBOX_LOGGER_ERROR_MESSAGE,
     SUBJECT,
     TEXT,
+    URL,
 )
 from core.logging_config import setup_fetch_emails_logging
 from core.utils import (
@@ -43,7 +49,7 @@ fetch_emails_logger = setup_fetch_emails_logging()
 
 
 async def fetch_emails(
-    email_account: EmailAccount,
+    email_account: EmailAccount, host: str, port: str
 ) -> dict[str, str] | list[dict[str, Any]]:
     """
     Подключение к почтовому серверу и получение данных электронных писем для
@@ -91,16 +97,14 @@ async def fetch_emails(
             continue
         try:
             msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
-            attachments = get_attachments_from_message(msg)
-            message_id = msg["Message-ID"]
+            attachments = get_attachments_from_message(msg, host, port)
+            message_id = msg[MESSAGE_ID]
             subject = msg[SUBJECT.title()]
             mail_from = msg[FROM.title()]
-            date = datetime.strptime(
-                msg[DATE.title()], "%a, %d %b %Y %H:%M:%S %z"
-            )
+            date = datetime.strptime(msg[DATE.title()], DATETIME_FORMAT)
             received = datetime.strptime(
                 msg[RECEIVED.title()].split(";")[1].strip().split(" (")[0],
-                "%a, %d %b %Y %H:%M:%S %z",
+                DATETIME_FORMAT,
             )
             text = get_text_from_message(msg)
             await save_email_to_db(
@@ -121,10 +125,10 @@ async def fetch_emails(
                     DATE: serialize_datetime(date),
                     RECEIVED: serialize_datetime(received),
                     TEXT: text[:1000],
-                    # ATTACHMENTS: [
-                    #     {"filename": a["filename"], "url": a["url"]}
-                    #     for a in attachments
-                    # ],
+                    ATTACHMENTS: [
+                        {FILENAME: a[FILENAME], URL: a[URL]}
+                        for a in attachments
+                    ],
                 }
             )
         except IndexError as e:
@@ -132,5 +136,8 @@ async def fetch_emails(
                 PARSING_MAIL_LOGGER_ERROR_MESSAGE, msg_id, str(e)
             )
             continue
+    fetch_emails_logger.info(
+        FETCH_EMAILS_COMPLETE, datetime.utcnow() + timedelta(hours=CURRENT_GMT)
+    )
     await imap.logout()
     return email_list
