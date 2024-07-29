@@ -1,7 +1,7 @@
 from django.db import models
 
 from core.constants import EmailConfig
-from core.utils import email_file_path
+from core.utils import attachments_file_path
 
 
 class Email(models.Model):
@@ -32,7 +32,7 @@ class Email(models.Model):
         blank=True,
     )
     attachments = models.FileField(
-        upload_to=email_file_path,
+        upload_to=attachments_file_path,
         verbose_name=EmailConfig.ATTACHMENTS_VERBOSE_NAME,
         null=True,
         blank=True,

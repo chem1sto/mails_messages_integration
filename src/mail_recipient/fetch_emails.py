@@ -1,9 +1,8 @@
 from email import policy
 from email.parser import BytesParser
 from typing import Any
-
+from datetime import datetime
 import aioimaplib
-from django.core.files import File
 
 from core.constants import (
     ATTACHMENTS,
@@ -32,10 +31,13 @@ from core.constants import (
 )
 from core.logging_config import setup_fetch_emails_logging
 from core.utils import (
-    email_file_path, get_text_from_message, get_attachments_from_message
+    get_text_from_message,
+    get_attachments_from_message,
+    serialize_datetime,
 )
 from email_account.models import EmailAccount
 from mail_recipient.models import Email
+from mail_recipient.utils import save_email_to_db
 
 fetch_emails_logger = setup_fetch_emails_logging()
 
@@ -82,38 +84,40 @@ async def fetch_emails(
                 RECEIVE_MAIL_ERROR_MESSAGE, msg_id, msg_data[1]
             )
             continue
-        try:
-            if len(msg_data) < 2:
-                fetch_emails_logger.error(
-                    NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE, msg_id
-                )
-                continue
-            msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
-            subject = msg[SUBJECT.title()]
-            date = msg[DATE.title()]
-            received = msg[RECEIVED.title()]
-            text = get_text_from_message(msg)
-            attachments = get_attachments_from_message(msg)
-            email = Email(
-                subject=subject,
-                mail_from=msg[FROM.title()],
-                date=date,
-                received=received,
-                text=text,
+        if len(msg_data) < 2:
+            fetch_emails_logger.error(
+                NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE, msg_id
             )
-            email.save()
-            for attachment in attachments:
-                filename = attachment["filename"]
-                content = attachment["content"]
-                with open(email_file_path(email, filename), "wb") as f:
-                    f.write(content)
-                email.attachments.save(filename, File(f))
+            continue
+        try:
+            msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
+            attachments = get_attachments_from_message(msg)
+            subject = msg[SUBJECT.title()]
+            mail_from = msg[FROM.title()]
+            date = datetime.strptime(
+                msg[DATE.title()], "%a, %d %b %Y %H:%M:%S %z"
+            )
+            received = datetime.strptime(
+                msg[RECEIVED.title()].split(";")[1].strip().split(" (")[0],
+                "%a, %d %b %Y %H:%M:%S %z",
+            )
+            text = get_text_from_message(msg)
+            await save_email_to_db(
+                Email(
+                    subject=subject,
+                    mail_from=mail_from,
+                    date=date,
+                    received=received,
+                    text=text,
+                ),
+                attachments,
+            )
             email_list.append(
                 {
                     SUBJECT: subject,
-                    FROM: msg[FROM.title()],
-                    DATE: date,
-                    RECEIVED: received,
+                    FROM: mail_from,
+                    DATE: serialize_datetime(date),
+                    RECEIVED: serialize_datetime(received),
                     TEXT: text,
                     ATTACHMENTS: attachments,
                 }
