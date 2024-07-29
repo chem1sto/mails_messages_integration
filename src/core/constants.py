@@ -39,6 +39,7 @@ PARSING_MAIL_LOGGER_ERROR_MESSAGE = "Ошибка при парсинге пис
 RFC822_FORMAT = "(RFC822)"
 RECEIVE_MAIL_ERROR_MESSAGE = "Ошибка при получении письма %s: %s"
 RECEIVED = "received"
+SAVE_EMAIL_TO_DB = "save_email_to_db"
 SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS = (
     "Вложение %s для письма с message_id %s успешно сохранено."
 )

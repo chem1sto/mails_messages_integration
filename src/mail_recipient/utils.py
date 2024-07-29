@@ -12,13 +12,14 @@ from core.constants import (
     MAIL_FROM,
     RECEIVED,
     SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
+    SAVE_EMAIL_TO_DB,
     SAVE_EMAIL_TO_DB_SUCCESS,
     SUBJECT,
     TEXT,
 )
 from mail_recipient.models import Email
 
-save_email_to_db_logger = logging.getLogger("save_email_to_db")
+save_email_to_db_logger = logging.getLogger(SAVE_EMAIL_TO_DB)
 
 
 async def save_email_to_db(email: Email, attachments: list):
