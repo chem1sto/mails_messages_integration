@@ -1,4 +1,5 @@
 ACTION = "action"
+ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
 ATTACHMENT_PATH = "http://{host}:{port}/attachments/{subfolder}/{filename}"
 ATTACHMENTS = "attachments"
@@ -18,6 +19,7 @@ EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE = (
 )
 EMAIL_LIST = "email_list"
 EMAIL_LIST_HTML = "email_list.html"
+EMAIL_LIST_REDIRECT = "/email_list/?email={email}"
 EMAIL_LOGGER_ERROR_MESSAGE = "Ошибка при получении письма: %s"
 EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная почта"
 EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
@@ -29,6 +31,7 @@ FETCH_EMAILS = "fetch_emails"
 FETCH_EMAILS_COMPLETE = "Получение писем закончено %s"
 FILE_NOT_FOUND = "File not found"
 FILENAME = "filename"
+FORM = "form"
 FROM = "from"
 INBOX = "INBOX"
 INDEX = "index"
@@ -39,10 +42,11 @@ NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE = (
 MAIL_FROM = "mail_from"
 MESSAGE = "message"
 MESSAGE_ID = "Message-ID"
+REQUEST_METHOD = "POST"
 MULTIPART = "multipart"
-NO_EMAIL_ERROR_MESSAGE = "Требуется электронная почта"
 OK = "OK"
 PARSING_MAIL_LOGGER_ERROR_MESSAGE = "Ошибка при парсинге письма %s: %s"
+PASSWORD = "password"
 RFC822_FORMAT = "(RFC822)"
 RECEIVE_MAIL_ERROR_MESSAGE = "Ошибка при получении письма %s: %s"
 RECEIVED = "received"
@@ -69,7 +73,6 @@ TIMEOUT_LOGGER_ERROR_MESSAGE = (
     "Превышено время ожидания ответа от imap-сервера"
 )
 TYPE = "type"
-UNEXPECTED_ERROR_MESSAGE = "Произошла неожиданная ошибка: %s"
 UNEXPECTED_LOGGER_ERROR_MESSAGE = "Произошла неожиданная ошибка: %s"
 UNSUPPORTED_ACTION_ERROR_MESSAGE = "Неподдерживаемое действие: %s"
 UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE = (
