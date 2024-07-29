@@ -9,7 +9,7 @@ from core.constants import (
     EMAIL_LIST_REDIRECT,
     FORM,
     PASSWORD,
-    REQUEST_METHOD
+    REQUEST_METHOD,
 )
 
 

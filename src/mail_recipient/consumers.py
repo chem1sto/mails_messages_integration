@@ -76,9 +76,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
             host, port = self.scope[SERVER]
             emails = await fetch_emails(
-                email_account,
-                host=host,
-                port=str(port)
+                email_account, host=host, port=str(port)
             )
             if ERROR in emails:
                 consumer_logger.error(
