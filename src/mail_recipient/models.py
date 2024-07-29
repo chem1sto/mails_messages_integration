@@ -9,25 +9,31 @@ class Email(models.Model):
         max_length=EmailConfig.SUBJECT_MAX_LENGTH,
         verbose_name=EmailConfig.SUBJECT_VERBOSE_NAME,
     )
-    date_of_receipt = models.DateTimeField(
-        verbose_name=EmailConfig.DATE_OF_RECEIPT_VERBOSE_NAME,
+    mail_from = models.CharField(
+        max_length=EmailConfig.MAIL_FROM_MAX_LENGTH,
+        verbose_name=EmailConfig.MAIL_FROM_VERBOSE_NAME,
         null=True,
         blank=True,
     )
-    date_of_dispatch = models.DateTimeField(
-        verbose_name=EmailConfig.DATE_OF_DISPATCH_VERBOSE_NAME,
+    date = models.DateTimeField(
+        verbose_name=EmailConfig.DATE_VERBOSE_NAME,
         null=True,
         blank=True,
     )
-    body = models.TextField(
-        max_length=EmailConfig.BODY_MAX_LENGTH,
-        verbose_name=EmailConfig.BODY_VERBOSE_NAME,
+    received = models.DateTimeField(
+        verbose_name=EmailConfig.RECEIVED_VERBOSE_NAME,
         null=True,
         blank=True,
     )
-    included_files = models.FileField(
+    text = models.TextField(
+        max_length=EmailConfig.TEXT_MAX_LENGTH,
+        verbose_name=EmailConfig.TEXT_VERBOSE_NAME,
+        null=True,
+        blank=True,
+    )
+    attachments = models.FileField(
         upload_to=email_file_path,
-        verbose_name=EmailConfig.INCLUDED_FILES_VERBOSE_NAME,
+        verbose_name=EmailConfig.ATTACHMENTS_VERBOSE_NAME,
         null=True,
         blank=True,
     )

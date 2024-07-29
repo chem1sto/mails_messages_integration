@@ -15,12 +15,16 @@
                     const data = JSON.parse(event.data);
                     if (data.type === "email_list") {
                         const emails = data.emails;
-                        const emailList = $("#email-list");
-                        emailList.empty();
+                        const emailTable = $("#email-table tbody");
+                        emailTable.empty();
                         emails.forEach(email => {
-                            const li = $("<li>");
-                            li.html(`<strong>Subject:</strong> ${email.subject}<br><strong>From:</strong> ${email.from}`);
-                            emailList.append(li);
+                            const row = $("<tr>");
+                            row.append($("<td>").text(email.subject));
+                            row.append($("<td>").text(email.from));
+                            row.append($("<td>").text(email.date));
+                            row.append($("<td>").text(email.received));
+                            row.append($("<td>").text(email.text));
+                            emailTable.append(row);
                         });
                     } else if (data.type === "error") {
                         alert(data.message);
@@ -36,6 +40,18 @@
 </head>
 <body>
     <h1>Email List</h1>
-    <ul id="email-list"></ul>
+    <table id="email-table" border="1">
+        <thead>
+            <tr>
+                <th>Тема сообщения</th>
+                <th>Отправитель</th>
+                <th>Дата отправки</th>
+                <th>Дата получения</th>
+                <th>Текст сообщения</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>
 </html>

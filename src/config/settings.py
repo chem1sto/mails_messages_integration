@@ -149,5 +149,10 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
+        "consumer": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
     },
 }

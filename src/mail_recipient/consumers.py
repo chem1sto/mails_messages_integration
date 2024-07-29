@@ -7,18 +7,27 @@ from core.constants import (
     ACTION,
     EMAIL,
     EMAIL_LIST,
-    EMAIL_REQUIRED,
-    EMAIL_NOT_FOUND,
+    EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
+    EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
+    EMAIL_REQUIRED_ERROR_MESSAGE,
+    EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
+    EMAIL_LOGGER_ERROR_MESSAGE,
     EMAILS,
     ERROR,
     FETCH_EMAILS,
     MESSAGE,
-    RESPONSE_TIMED_OUT,
+    TIMEOUT_ERROR_MESSAGE,
+    TIMEOUT_LOGGER_ERROR_MESSAGE,
     TYPE,
-    UNSUPPORTED_ACTION,
+    UNEXPECTED_LOGGER_ERROR_MESSAGE,
+    UNSUPPORTED_ACTION_ERROR_MESSAGE,
+    UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE,
 )
+from core.logging_config import setup_consumer_logging
 from email_account.models import EmailAccount
 from mail_recipient.fetch_emails import fetch_emails
+
+consumer_logger = setup_consumer_logging()
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):
@@ -46,31 +55,49 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             text_data_json = json.loads(text_data)
             action = text_data_json.get(ACTION)
             if action != FETCH_EMAILS:
-                raise ValueError(UNSUPPORTED_ACTION, action)
+                consumer_logger.error(
+                    UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE, action
+                )
+                raise ValueError(UNSUPPORTED_ACTION_ERROR_MESSAGE, action)
             email = text_data_json.get(EMAIL)
             if not email:
-                raise ValueError(EMAIL_REQUIRED)
+                consumer_logger.error(
+                    EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE, email
+                )
+                raise ValueError(EMAIL_REQUIRED_ERROR_MESSAGE)
             email_account = await EmailAccount.objects.filter(
                 email=email
             ).afirst()
             if not email_account:
-                raise ValueError(EMAIL_NOT_FOUND)
+                consumer_logger.error(
+                    EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE, email_account
+                )
+                raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
             emails = await fetch_emails(email_account)
             if ERROR in emails:
+                consumer_logger.error(
+                    EMAIL_LOGGER_ERROR_MESSAGE, email_account
+                )
                 raise ValueError(emails[ERROR])
             return await self.send(
                 text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: emails})
             )
         except TimeoutError:
+            consumer_logger.error(
+                TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True
+            )
             return await self.send(
                 text_data=json.dumps(
                     {
                         TYPE: ERROR,
-                        MESSAGE: RESPONSE_TIMED_OUT,
+                        MESSAGE: TIMEOUT_ERROR_MESSAGE,
                     }
                 )
             )
         except Exception as e:
+            consumer_logger.error(
+                UNEXPECTED_LOGGER_ERROR_MESSAGE, str(e), exc_info=True
+            )
             return await self.send(
                 text_data=json.dumps({TYPE: ERROR, MESSAGE: str(e)})
             )
