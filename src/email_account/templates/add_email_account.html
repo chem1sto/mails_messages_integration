@@ -2,27 +2,27 @@
 <html>
 <head>
     <title>Интеграция почтовых сообщений</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h1>Введите данные от своей электронной почты</h1>
-    <form method="post">
-        {% csrf_token %}
-        <p>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </p>
-        <p>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-        </p>
-        <button type="submit">Получить письма</button>
-    </form>
-    {% if form.errors %}
-    <div class="error">
-        {% for field, errors in form.errors.items %}
-            <p>{{ field }}: {{ errors|join:", " }}</p>
-        {% endfor %}
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="helptext">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Получить письма</button>
+        </form>
     </div>
-    {% endif %}
 </body>
 </html>

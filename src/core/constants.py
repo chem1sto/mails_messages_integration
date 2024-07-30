@@ -115,6 +115,6 @@ class EmailAccountConfig:
 class EmailAccountFormConfig:
     """Настройки для формы EmailAccount."""
 
-    PASSWORD_LABEL = "Пароль для приложения от почты"
-    PASSWORD_HELP_TEXT = "Введите пароль"
+    PASSWORD_LABEL = "Пароль приложения от почты"
+    PASSWORD_HELP_TEXT = "Введите пароль приложения от почты"
     PASSWORD_VALIDATOR_MESSAGE = "Пароль должен быть не менее 8 символов"
