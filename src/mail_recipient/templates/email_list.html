@@ -4,7 +4,7 @@
     <title>Список электронных писем</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/email_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/email_list_styles.css' %}">
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -63,8 +63,9 @@
     </script>
 </head>
 <body>
-    <div>
+    <div class="header-container">
         <h1>Список электронных писем</h1>
+        <button onclick="window.location.href='/'">Вернуться к стартовой странице</button>
     </div>
     <div id="error-container">
         <div id="error-message" class="error"></div>
