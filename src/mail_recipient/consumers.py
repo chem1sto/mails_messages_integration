@@ -11,7 +11,6 @@ from core.constants import (
     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
     EMAIL_REQUIRED_ERROR_MESSAGE,
     EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
-    EMAIL_LOGGER_ERROR_MESSAGE,
     EMAILS,
     ERROR,
     FETCH_EMAILS,
@@ -76,16 +75,14 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
             host, port = self.scope[SERVER]
             await fetch_emails(
-                consumer=self, email_account=email_account, host=host, port=str(port)
+                consumer=self,
+                email_account=email_account,
+                host=host,
+                port=str(port),
             )
-            # if ERROR in emails:
-            #     consumer_logger.error(
-            #         EMAIL_LOGGER_ERROR_MESSAGE, email_account
-            #     )
-            #     raise ValueError(emails[ERROR])
             await self.send(
-                    text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: [email]})
-                )
+                text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: [email]})
+            )
         except TimeoutError:
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
             return await self.send(

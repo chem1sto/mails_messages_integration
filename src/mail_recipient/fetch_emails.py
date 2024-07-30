@@ -4,6 +4,7 @@ from email import policy
 from email.parser import BytesParser
 
 import aioimaplib
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
     ATTACHMENTS,
@@ -50,11 +51,13 @@ from mail_recipient.models import Email
 from mail_recipient.utils import save_email_to_db
 
 fetch_emails_logger = setup_fetch_emails_logging()
-from mail_recipient.consumers import EmailListConsumer
 
 
 async def fetch_emails(
-    consumer: EmailListConsumer, email_account: EmailAccount, host: str, port: str
+    consumer: AsyncWebsocketConsumer,
+    email_account: EmailAccount,
+    host: str,
+    port: str,
 ):
     """
     Подключение к почтовому серверу и получение данных электронных писем для
@@ -84,11 +87,15 @@ async def fetch_emails(
             SEARCH_MAILS_LOGGER_ERROR_MESSAGE, search_result[0]
         )
         return {ERROR: SEARCH_MAILS_ERROR_MESSAGE}
-    for msg_id in search_result[1][0].split()[:100]:
+    all_emails = search_result[1][0].split()
+    await consumer.send(
+        text_data=json.dumps({TYPE: "total_emails", "total": len(all_emails[:100])})
+    )
+    for msg_id in all_emails[:100]:
         status, msg_data = await imap.fetch(msg_id.decode(), RFC822_FORMAT)
         if msg_id == b"":
             fetch_emails_logger.info(NO_MESSAGES_TO_PROCESS_LOGGER_INFO)
-            return
+            continue
         if status == BAD:
             fetch_emails_logger.error(
                 RECEIVE_MAIL_ERROR_MESSAGE, msg_id, msg_data[1]
@@ -123,16 +130,15 @@ async def fetch_emails(
                 attachments,
             )
             email_data = {
-                    SUBJECT: subject,
-                    FROM: mail_from,
-                    DATE: serialize_datetime(date),
-                    RECEIVED: serialize_datetime(received),
-                    TEXT: text,
-                    ATTACHMENTS: [
-                        {FILENAME: a[FILENAME], URL: a[URL]}
-                        for a in attachments
-                    ],
-                }
+                SUBJECT: subject,
+                FROM: mail_from,
+                DATE: serialize_datetime(date),
+                RECEIVED: serialize_datetime(received),
+                TEXT: text,
+                ATTACHMENTS: [
+                    {FILENAME: a[FILENAME], URL: a[URL]} for a in attachments
+                ],
+            }
             await consumer.send(
                 text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: [email_data]})
             )

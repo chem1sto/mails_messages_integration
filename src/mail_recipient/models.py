@@ -53,4 +53,4 @@ class Email(models.Model):
     )
 
     def __str__(self):
-        return self.subject[:EmailConfig.ATTACHMENTS_MAX_LENGTH]
+        return self.subject[: EmailConfig.ATTACHMENTS_MAX_LENGTH]

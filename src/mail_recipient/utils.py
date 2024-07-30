@@ -50,7 +50,9 @@ async def save_email_to_db(email: Email, attachments: list):
         filename = attachment[FILENAME]
         content = attachment[CONTENT]
         content_file = ContentFile(content)
-        await sync_to_async(email_instance.attachments.save)(filename, content_file)
+        await sync_to_async(email_instance.attachments.save)(
+            filename, content_file
+        )
         save_email_to_db_logger.info(
             SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
             filename,

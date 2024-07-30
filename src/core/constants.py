@@ -20,7 +20,6 @@ EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE = (
 EMAIL_LIST = "email_list"
 EMAIL_LIST_HTML = "email_list.html"
 EMAIL_LIST_REDIRECT = "/email_list/?email={email}"
-EMAIL_LOGGER_ERROR_MESSAGE = "Ошибка при получении письма: %s"
 EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная почта"
 EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
     "Нет электронной почты в text_data_json: %s"

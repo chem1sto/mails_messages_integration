@@ -20,8 +20,8 @@ def format_file_or_folder_path(object_name: str) -> str:
 def format_attachments_file_path(subject: str, filename: str) -> str | bytes:
     """Формирование пути и названия для загружаемого файла из вложений."""
     return os.path.join(
-            SRC,
-            ATTACHMENTS,
-            format_file_or_folder_path(subject[:ATTACHMENTS_MAX_LENGTH]),
-            format_file_or_folder_path(filename),
-        )
+        SRC,
+        ATTACHMENTS,
+        format_file_or_folder_path(subject[:ATTACHMENTS_MAX_LENGTH]),
+        format_file_or_folder_path(filename),
+    )
