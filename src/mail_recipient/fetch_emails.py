@@ -1,4 +1,5 @@
 """Модуль fetch_emails."""
+
 import json
 from datetime import datetime, timedelta
 from email import policy

@@ -1,4 +1,5 @@
 """Настройки проекта."""
+
 import os
 from pathlib import Path
 

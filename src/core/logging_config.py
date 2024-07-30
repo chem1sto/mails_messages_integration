@@ -1,4 +1,5 @@
 """Настройка логирования для модулей fetch_emails и consumer."""
+
 import logging
 
 from django.conf import settings

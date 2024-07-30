@@ -1,4 +1,5 @@
 """Константы и настройки для моделей проекта."""
+
 ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"

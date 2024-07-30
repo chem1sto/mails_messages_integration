@@ -1,4 +1,5 @@
 """Функции для получения корректных данных из электронных писем."""
+
 from datetime import datetime
 from email.message import Message
 from typing import Any

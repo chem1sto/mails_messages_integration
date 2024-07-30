@@ -12,6 +12,7 @@ URL-адреса:
 Дополнительная информация об этом файле доступна по ссылке
     https://docs.djangoproject.com/en/stable/topics/http/urls/
 """
+
 from django.urls import path, re_path
 
 from email_account.views import add_email_account

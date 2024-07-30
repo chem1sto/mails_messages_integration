@@ -1,4 +1,5 @@
 """Представления для приложения email_account."""
+
 from django.shortcuts import redirect, render
 
 from core.constants import (

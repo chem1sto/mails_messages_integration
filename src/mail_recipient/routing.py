@@ -3,6 +3,7 @@
 
 Содержит маршрут для WebSocket-соединения с EmailListConsumer.
 """
+
 from django.urls import re_path
 
 from mail_recipient.consumers import EmailListConsumer

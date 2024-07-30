@@ -1,4 +1,5 @@
 """Модуль consumers."""
+
 import json
 from typing import Any, Coroutine
 

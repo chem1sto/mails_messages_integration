@@ -1,4 +1,5 @@
 """Приложение Email account."""
+
 from django.apps import AppConfig
 
 

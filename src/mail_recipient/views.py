@@ -1,4 +1,5 @@
 """Представления для приложения Mail Recipient."""
+
 import os
 
 from django.conf import settings

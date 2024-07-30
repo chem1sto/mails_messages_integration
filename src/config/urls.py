@@ -9,6 +9,7 @@ URL-адреса:
 Дополнительная информация об этом файле доступна по ссылке
     https://docs.djangoproject.com/en/stable/topics/http/urls/
 """
+
 from django.contrib import admin
 from django.urls import include, path
 

@@ -1,4 +1,5 @@
 """Функции для форматирования путей и названий файлов."""
+
 import os
 import re
 
@@ -16,8 +17,6 @@ def format_file_or_folder_path(object_name: str) -> str | None:
         return object_name
     if not isinstance(object_name, str):
         object_name = str(object_name)
-    if len(object_name) > ATTACHMENTS_MAX_LENGTH:
-        object_name = object_name[:ATTACHMENTS_MAX_LENGTH]
     for char in FORBIDDEN_CHARS:
         object_name = object_name.replace(char, "_")
     object_name = re.sub(r"_+", "_", object_name)
@@ -26,9 +25,14 @@ def format_file_or_folder_path(object_name: str) -> str | None:
 
 def format_attachments_file_path(subject: str, filename: str) -> str | bytes:
     """Формирование пути и названия для загружаемого файла из вложений."""
-    return os.path.join(
-        SRC,
-        ATTACHMENTS,
-        format_file_or_folder_path(subject[:ATTACHMENTS_MAX_LENGTH]),
-        format_file_or_folder_path(filename),
-    )
+    full_path = os.path.join(SRC, ATTACHMENTS, subject, filename)
+    if len(full_path) > ATTACHMENTS_MAX_LENGTH:
+        subject = subject[
+            : ATTACHMENTS_MAX_LENGTH
+            - len(SRC)
+            - len(ATTACHMENTS)
+            - len(filename)
+            - 2
+        ]
+        full_path = os.path.join(SRC, ATTACHMENTS, subject, filename)
+    return full_path
