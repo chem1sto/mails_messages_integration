@@ -7,6 +7,6 @@ urlpatterns = [
     path("", add_email_account, name="add_email_account"),
     path("email_list/", email_list, name="email_list"),
     re_path(
-        r"^attachments/(?P<path>.*)$", download_file, name="download_file"
+        r"^attachments/(?P<filename>.*)$", download_file, name="download_file"
     ),
 ]

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Список электронных писем</title>
@@ -20,8 +21,6 @@
                     if (data.type === "email_list") {
                         const emails = data.emails;
                         totalEmails = emails.length;
-                        const emailTable = $("#email-table tbody");
-                        emailTable.empty();
                         emails.forEach(email => {
                             const row = $("<tr>");
                             row.append($("<td>").text(email.subject));
@@ -33,15 +32,15 @@
                             if (email.attachments && email.attachments.length > 0) {
                                 email.attachments.forEach(attachment => {
                                     const attachmentLink = $("<a>")
-                                        .attr("href", attachment.url)
-                                        .text(attachment.filename);
+                                        .attr("href", "#")
+                                        .text(attachment.filename)
                                     attachmentsCell.append(attachmentLink).append("<br>");
                                 });
                             } else {
                                 attachmentsCell.text("Нет вложений");
                             }
                             row.append(attachmentsCell);
-                            emailTable.append(row);
+                            $("#email-table tbody").append(row);
                             loadedEmails++;
                             updateProgressBar(loadedEmails, totalEmails);
                         });

@@ -1,9 +1,7 @@
 import logging
-from os import remove
 
 from asgiref.sync import sync_to_async
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
+from django.core.files.base import ContentFile
 
 from core.constants import (
     CONTENT,
@@ -51,16 +49,10 @@ async def save_email_to_db(email: Email, attachments: list):
     for attachment in attachments:
         filename = attachment[FILENAME]
         content = attachment[CONTENT]
-        with NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(content)
-            temp_file.flush()
-            with open(temp_file.name, "rb") as f:
-                await sync_to_async(email_instance.attachments.save)(
-                    filename, File(f)
-                )
-            save_email_to_db_logger.info(
-                SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
-                filename,
-                email.message_id,
-            )
-        remove(temp_file.name)
+        content_file = ContentFile(content)
+        await sync_to_async(email_instance.attachments.save)(filename, content_file)
+        save_email_to_db_logger.info(
+            SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
+            filename,
+            email.message_id,
+        )

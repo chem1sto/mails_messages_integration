@@ -1,7 +1,16 @@
 from django.db import models
 
 from core.constants import EmailConfig
-from core.utils import attachments_file_path
+from core.path_utils import format_attachments_file_path
+from mail_recipient.validators import validate_file_does_not_exist
+
+
+def get_attachment_path(instance, filename):
+    """
+    Получение сформированного пути для файла из вложений.
+    Позволяет избежать циклического импорта.
+    """
+    return format_attachments_file_path(instance.subject, filename)
 
 
 class Email(models.Model):
@@ -35,12 +44,13 @@ class Email(models.Model):
         blank=True,
     )
     attachments = models.FileField(
-        upload_to=attachments_file_path,
+        upload_to=get_attachment_path,
         max_length=EmailConfig.ATTACHMENTS_MAX_LENGTH,
         verbose_name=EmailConfig.ATTACHMENTS_VERBOSE_NAME,
         null=True,
         blank=True,
+        validators=[validate_file_does_not_exist],
     )
 
     def __str__(self):
-        return self.subject[:50]
+        return self.subject[:EmailConfig.ATTACHMENTS_MAX_LENGTH]

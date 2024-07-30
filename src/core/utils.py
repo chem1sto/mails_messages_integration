@@ -1,35 +1,20 @@
-import os
 from datetime import datetime
 from email.message import Message
 from typing import Any
 
 from core.constants import (
-    ATTACHMENTS,
     ATTACHMENT_PATH,
-    ATTACHMENTS_MAX_LENGTH,
     CONTENT,
     CONTENT_DISPOSITION,
     FILENAME,
     MULTIPART,
     SERIALIZE_DATETIME_ERROR_MESSAGE,
-    SRC,
     SUBJECT,
     TEXT_PLANE,
     TEXT_HTML,
     URL,
 )
-
-
-def attachments_file_path(instance, filename: str) -> str | bytes:
-    """Формирование пути и названия для загружаемого файла из вложений."""
-    return os.path.normpath(
-        os.path.join(
-            SRC,
-            ATTACHMENTS,
-            instance.subject[:ATTACHMENTS_MAX_LENGTH],
-            filename,
-        )
-    )
+from core.path_utils import format_file_or_folder_path
 
 
 def get_attachments_from_message(
@@ -37,7 +22,6 @@ def get_attachments_from_message(
 ) -> list[dict[str, Any]]:
     """Извлечение прикреплённых файлов из сообщения."""
     attachments = []
-    subfolder = message[SUBJECT].replace(" ", "_").replace("/", "_")
     for part in message.walk():
         if part.get_content_maintype() == MULTIPART:
             continue
@@ -53,8 +37,8 @@ def get_attachments_from_message(
                     URL: ATTACHMENT_PATH.format(
                         host=host,
                         port=port,
-                        subfolder=subfolder,
-                        filename=filename,
+                        subfolder=format_file_or_folder_path(message[SUBJECT]),
+                        filename=format_file_or_folder_path(filename),
                     ),
                 }
             )

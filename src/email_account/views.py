@@ -26,7 +26,7 @@ def add_email_account(request):
                 if not created:
                     email_account.password = password
                     email_account.save()
-                return redirect(EMAIL_LIST_REDIRECT(email=email))
+                return redirect(EMAIL_LIST_REDIRECT.format(email=email))
             except Exception as e:
                 form.add_error(None, str(e))
     else:

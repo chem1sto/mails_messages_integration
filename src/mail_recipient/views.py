@@ -1,10 +1,11 @@
 import os
 
 from django.conf import settings
-from django.http import FileResponse, HttpResponseNotFound
+from django.http import FileResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 
-from core.constants import EMAIL_LIST_HTML, FILE_NOT_FOUND
+from core.constants import EMAIL_LIST_HTML, FILENAME, FILE_NOT_FOUND
 
 
 def email_list(request):
@@ -16,4 +17,4 @@ def download_file(request, filename):
     if os.path.exists(file_path):
         return FileResponse(open(file_path, "rb"), as_attachment=True)
     else:
-        return HttpResponseNotFound(FILE_NOT_FOUND)
+        return JsonResponse({FILE_NOT_FOUND: True, FILENAME: filename})
