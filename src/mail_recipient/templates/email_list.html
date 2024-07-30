@@ -34,7 +34,7 @@
                             if (email.attachments && email.attachments.length > 0) {
                                 email.attachments.forEach(attachment => {
                                     const attachmentLink = $("<a>")
-                                        .attr("href", "#")
+                                        .attr("href", attachment.url)
                                         .text(attachment.filename)
                                     attachmentsCell.append(attachmentLink).append("<br>");
                                 });
