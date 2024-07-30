@@ -3,9 +3,12 @@
 <head>
     <title>Интеграция почтовых сообщений</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/add_email_account.css' %}">
 </head>
 <body>
+    <div>
+        <h1>Введите данные приложения вашей электронной почты</h1>
+    </div>
     <div class="form-container">
         <form method="post">
             {% csrf_token %}

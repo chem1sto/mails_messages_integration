@@ -3,7 +3,7 @@
 <head>
     <title>Список электронных писем</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/email_list.css">
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -46,8 +46,7 @@
                             updateProgressBar(loadedEmails, totalEmails);
                         });
                     } else if (data.type === "error") {
-                        alert(data.message);
-                        window.location.href = '/?error=' + encodeURIComponent(data.message);
+                        $("#error-message").text(data.message);
                     }
                 };
             } else {
@@ -66,6 +65,7 @@
     <div>
         <h1>Список электронных писем</h1>
     </div>
+    <div id="error-message" class="error"></div>
     <div id="progress-bar-container">
         <div id="progress-bar">0%</div>
     </div>
