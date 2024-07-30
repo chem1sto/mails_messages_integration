@@ -3,6 +3,7 @@ asgiref~=3.8.1
 black @ git+https://github.com/psf/black
 celery==5.4.0
 channels~=4.0.0
+chardet==5.2.0
 channels-redis~=4.1.0
 daphne~=4.0.0
 django==5.0.7

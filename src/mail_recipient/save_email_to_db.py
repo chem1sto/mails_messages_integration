@@ -9,6 +9,7 @@ from core.constants import (
     DATE,
     FILENAME,
     MAIL_FROM,
+    NO_SUBJECT,
     RECEIVED,
     SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
     SAVE_EMAIL_TO_DB,
@@ -23,6 +24,8 @@ save_email_to_db_logger = logging.getLogger(SAVE_EMAIL_TO_DB)
 
 async def save_email_to_db(email: Email, attachments: list):
     """Сохранение электронного письма в БД."""
+    if not email.subject:
+        email.subject = NO_SUBJECT
     email_instance, created = await Email.objects.aget_or_create(
         message_id=email.message_id,
         defaults={

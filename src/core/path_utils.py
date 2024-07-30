@@ -2,13 +2,21 @@
 import os
 import re
 
-from core.constants import ATTACHMENTS, ATTACHMENTS_MAX_LENGTH, SRC
+from core.constants import (
+    ATTACHMENTS,
+    ATTACHMENTS_MAX_LENGTH,
+    FORBIDDEN_CHARS,
+    SRC,
+)
 
 
-def format_file_or_folder_path(object_name: str) -> str:
+def format_file_or_folder_path(object_name: str) -> str | None:
     """Формирование названий файлов и папок с разрешёнными в url символами."""
-    forbidden_chars = r" <>\"\'#%{}|\\^~[]`"
-    for char in forbidden_chars:
+    if object_name is None:
+        return object_name
+    if object_name > ATTACHMENTS_MAX_LENGTH:
+        object_name = object_name[:ATTACHMENTS_MAX_LENGTH]
+    for char in FORBIDDEN_CHARS:
         object_name = object_name.replace(char, "_")
     object_name = re.sub(r"_+", "_", object_name)
     return object_name

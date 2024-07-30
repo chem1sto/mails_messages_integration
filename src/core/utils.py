@@ -3,15 +3,17 @@ from datetime import datetime
 from email.message import Message
 from typing import Any
 
+import chardet
+
 from core.constants import (
     ATTACHMENT_PATH,
     CONTENT,
     CONTENT_DISPOSITION,
+    ENCODING,
     FILENAME,
     MULTIPART,
     SERIALIZE_DATETIME_ERROR_MESSAGE,
     SUBJECT,
-    TEXT_HTML,
     TEXT_PLANE,
     URL,
 )
@@ -46,6 +48,23 @@ def get_attachments_from_message(
     return attachments
 
 
+def decode_text(payload):
+    """
+    Декодирует текст с автоматическим определением кодировки.
+
+    Аргументы:
+        payload (bytes): Байтовый массив текста.
+
+    Возвращает:
+        str: Декодированный текст.
+    """
+    try:
+        return payload.decode()
+    except UnicodeDecodeError:
+        detected_encoding = chardet.detect(payload)
+        return payload.decode(detected_encoding[ENCODING])
+
+
 def get_text_from_message(message: Message) -> str:
     """Извлечение текста из сообщения."""
     text = ""
@@ -53,11 +72,13 @@ def get_text_from_message(message: Message) -> str:
         for part in message.walk():
             content_type = part.get_content_type()
             if content_type == TEXT_PLANE:
-                text += part.get_payload(decode=True).decode()
-            elif content_type == TEXT_HTML:
-                text += part.get_payload(decode=True).decode()
+                payload = part.get_payload(decode=True)
+                text += decode_text(payload)
     else:
-        text = message.get_payload(decode=True).decode()
+        content_type = message.get_content_type()
+        if content_type == TEXT_PLANE:
+            payload = message.get_payload(decode=True)
+            text += decode_text(payload)
     return text
 
 
