@@ -71,6 +71,8 @@ TIMEOUT_ERROR_MESSAGE = "Превышено время ожидания отве
 TIMEOUT_LOGGER_ERROR_MESSAGE = (
     "Превышено время ожидания ответа от imap-сервера"
 )
+TOTAL_EMAILS = "total_emails"
+TOTAL = "total"
 TYPE = "type"
 UNEXPECTED_LOGGER_ERROR_MESSAGE = "Произошла неожиданная ошибка: %s"
 UNSUPPORTED_ACTION_ERROR_MESSAGE = "Неподдерживаемое действие: %s"

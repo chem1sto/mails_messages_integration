@@ -6,12 +6,10 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from core.constants import (
     ACTION,
     EMAIL,
-    EMAIL_LIST,
     EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
     EMAIL_REQUIRED_ERROR_MESSAGE,
     EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
-    EMAILS,
     ERROR,
     FETCH_EMAILS,
     MESSAGE,

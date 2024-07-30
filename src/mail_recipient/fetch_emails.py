@@ -17,12 +17,13 @@ from core.constants import (
     DATETIME_FORMAT,
     ERROR,
     EMAIL_LIST,
-    EMAILS,
+    EMAIL,
     FETCH_EMAILS_COMPLETE,
     FILENAME,
     FROM,
     INBOX,
     INDEX,
+    MESSAGE,
     MESSAGE_ID,
     NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE,
     NO_MESSAGES_TO_PROCESS_LOGGER_INFO,
@@ -37,6 +38,8 @@ from core.constants import (
     SELECT_INBOX_LOGGER_ERROR_MESSAGE,
     SUBJECT,
     TEXT,
+    TOTAL_EMAILS,
+    TOTAL,
     TYPE,
     URL,
 )
@@ -61,7 +64,7 @@ async def fetch_emails(
 ):
     """
     Подключение к почтовому серверу и получение данных электронных писем для
-    указанной электронной почты.
+    указанной электронной почты. Вывод полученных писем через consumer.
     """
     imap_server = "imap.gmail.com"
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
@@ -73,23 +76,39 @@ async def fetch_emails(
         fetch_emails_logger.error(
             AUTH_FAILED_LOGGER_ERROR_MESSAGE, login_result[1]
         )
-        return {ERROR: AUTH_FAILED_ERROR_MESSAGE}
+        await consumer.send(
+            text_data=json.dumps(
+                {TYPE: ERROR, MESSAGE: AUTH_FAILED_ERROR_MESSAGE}
+            )
+        )
+        return
     await imap.select(INDEX)
     select_result = await imap.select(INBOX)
     if select_result[0] != OK:
         fetch_emails_logger.error(
             SELECT_INBOX_LOGGER_ERROR_MESSAGE, select_result[1]
         )
-        return {ERROR: SELECT_INBOX_ERROR_MESSAGE}
+        await consumer.send(
+            text_data=json.dumps(
+                {TYPE: ERROR, MESSAGE: SELECT_INBOX_ERROR_MESSAGE}
+            )
+        )
+        return
     search_result = await imap.search(ALL)
     if search_result[0] != OK:
         fetch_emails_logger.error(
             SEARCH_MAILS_LOGGER_ERROR_MESSAGE, search_result[0]
         )
-        return {ERROR: SEARCH_MAILS_ERROR_MESSAGE}
+        await consumer.send(
+            text_data=json.dumps(
+                {TYPE: ERROR, MESSAGE: SEARCH_MAILS_ERROR_MESSAGE}
+            )
+        )
+        return
     all_emails = search_result[1][0].split()
+    total_emails = len(all_emails[:5])
     await consumer.send(
-        text_data=json.dumps({TYPE: "total_emails", "total": len(all_emails[:5])})
+        text_data=json.dumps({TYPE: TOTAL_EMAILS, TOTAL: total_emails})
     )
     for msg_id in all_emails[:5]:
         status, msg_data = await imap.fetch(msg_id.decode(), RFC822_FORMAT)
@@ -140,7 +159,7 @@ async def fetch_emails(
                 ],
             }
             await consumer.send(
-                text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: [email_data]})
+                text_data=json.dumps({TYPE: EMAIL_LIST, EMAIL: [email_data]})
             )
         except IndexError as e:
             fetch_emails_logger.error(

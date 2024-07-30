@@ -21,7 +21,7 @@
                         totalEmails = data.total;
                         updateProgressBar(loadedEmails, totalEmails);
                     } else if (data.type === "email_list") {
-                        const emails = data.emails;
+                        const emails = data.email;
                         emails.forEach(email => {
                             const row = $("<tr>");
                             row.append($("<td>").text(email.subject));
