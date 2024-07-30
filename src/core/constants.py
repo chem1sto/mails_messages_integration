@@ -1,3 +1,4 @@
+"""Константы и настройки для моделей проекта."""
 ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
@@ -83,9 +84,7 @@ URL = "url"
 
 
 class EmailConfig:
-    """
-    Настройки для модели Email.
-    """
+    """Настройки для модели Email."""
 
     MESSAGE_ID_MAX_LENGTH = 255
     SUBJECT_MAX_LENGTH = 255
@@ -101,9 +100,7 @@ class EmailConfig:
 
 
 class EmailAccountConfig:
-    """
-    Настройки для модели EmailAccount.
-    """
+    """Настройки для модели EmailAccount."""
 
     EMAIL = "email"
     EMAIL_VERBOSE_NAME = "Электронная почта"
@@ -113,3 +110,11 @@ class EmailAccountConfig:
     PASSWORD_VERBOSE_NAME = "Пароль"
     PASSWORD_HELP_TEXT = "Введите пароль от электронной почты"
     UNIQUE_EMAIL_PASSWORD_NAME = "unique_email_password"
+
+
+class EmailAccountFormConfig:
+    """Настройки для формы EmailAccount."""
+
+    PASSWORD_LABEL = "Пароль для приложения от почты"
+    PASSWORD_HELP_TEXT = "Введите пароль"
+    PASSWORD_VALIDATOR_MESSAGE = "Пароль должен быть не менее 8 символов"

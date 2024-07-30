@@ -1,5 +1,7 @@
-from pathlib import Path
+"""Настройки проекта."""
 import os
+from pathlib import Path
+
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +19,7 @@ INSTALLED_APPS = [
     "channels",
     "mail_recipient.apps.MailRecipientConfig",
     "core.apps.CoreConfig",
-    "email_account.apps.UsersConfig",
+    "email_account.apps.EmailAccountConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

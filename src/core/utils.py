@@ -1,3 +1,4 @@
+"""Функции для получения корректных данных из электронных писем."""
 from datetime import datetime
 from email.message import Message
 from typing import Any
@@ -10,8 +11,8 @@ from core.constants import (
     MULTIPART,
     SERIALIZE_DATETIME_ERROR_MESSAGE,
     SUBJECT,
-    TEXT_PLANE,
     TEXT_HTML,
+    TEXT_PLANE,
     URL,
 )
 from core.path_utils import format_file_or_folder_path

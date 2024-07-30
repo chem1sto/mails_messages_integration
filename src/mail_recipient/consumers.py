@@ -1,3 +1,4 @@
+"""Модуль consumers."""
 import json
 from typing import Any, Coroutine
 
@@ -30,8 +31,7 @@ consumer_logger = setup_consumer_logging()
 
 class EmailListConsumer(AsyncWebsocketConsumer):
     """
-    Асинхронный WebSocket consumer для обработки запросов, связанных с
-    электронной почтой.
+    Асинхронный WebSocket consumer для обработки запросов.
 
     Этот consumer подключается к WebSocket, принимает сообщения от клиентов,
     обрабатывает запросы на получение списка электронных писем и отправляет
@@ -44,11 +44,40 @@ class EmailListConsumer(AsyncWebsocketConsumer):
     """
 
     async def connect(self) -> Coroutine[Any, Any, None]:
+        """
+        Принимает WebSocket-соединение.
+
+        Этот метод вызывается при установлении соединения с клиентом.
+        Он принимает соединение и подготавливает consumer для обработки
+        сообщений.
+        """
         return await self.accept()
 
     async def receive(
         self, text_data: Any = None, bytes_data: Any = None
     ) -> Coroutine[Any, Any, None]:
+        """
+        Обрабатывает входящие сообщения от клиента.
+
+        Этот метод вызывается при получении сообщения от клиента.
+        Он обрабатывает сообщение, проверяет наличие необходимых данных и
+        выполняет соответствующие действия, такие как получение списка
+        электронных писем.
+
+        Аргументы:
+            text_data (Any): Текстовые данные, полученные от клиента.
+            bytes_data (Any): Байтовые данные, полученные от клиента (не
+        используются в этом методе).
+
+        Возвращает:
+            Coroutine[Any, Any, None]: Асинхронная корутина.
+
+        Вызывает ошибку:
+            ValueError: Если действие не поддерживается, email не указан или
+        учетная запись не найдена.
+            TimeoutError: Если возникает ошибка таймаута.
+            Exception: Если возникает неожиданная ошибка.
+        """
         try:
             text_data_json = json.loads(text_data)
             action = text_data_json.get(ACTION)
@@ -97,4 +126,16 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             )
 
     async def disconnect(self, close_code: Any) -> Coroutine[Any, Any, None]:
+        """
+        Закрывает WebSocket-соединение.
+
+        Этот метод вызывается при закрытии соединения с клиентом.
+        Он завершает соединение и выполняет необходимые действия по очистке.
+
+        Аргументы:
+            close_code (Any): Код закрытия соединения.
+
+        Возвращает:
+            Coroutine[Any, Any, None]: Асинхронная корутина.
+        """
         pass

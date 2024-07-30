@@ -1,3 +1,4 @@
+"""Модель Email."""
 from django.db import models
 
 from core.constants import EmailConfig
@@ -5,15 +6,36 @@ from core.path_utils import format_attachments_file_path
 from mail_recipient.validators import validate_file_does_not_exist
 
 
-def get_attachment_path(instance, filename):
+def get_attachment_path(instance, filename: str) -> str:
     """
     Получение сформированного пути для файла из вложений.
+
     Позволяет избежать циклического импорта.
+
+    Аргументы:
+        instance (Email): Экземпляр модели Email.
+        filename (str): Имя файла вложения.
+
+    Возвращает:
+        str: Сформированный путь для файла вложения.
     """
     return format_attachments_file_path(instance.subject, filename)
 
 
 class Email(models.Model):
+    """
+    Модель для хранения информации о полученных электронных письмах.
+
+    Attributes:
+        message_id (CharField): Уникальный идентификатор сообщения.
+        subject (CharField): Тема письма.
+        mail_from (CharField): Отправитель письма.
+        date (DateTimeField): Дата отправки письма.
+        received (DateTimeField): Дата получения письма.
+        text (TextField): Текст письма.
+        attachments (FileField): Вложения к письму.
+    """
+
     message_id = models.CharField(
         max_length=EmailConfig.MESSAGE_ID_MAX_LENGTH, unique=True
     )
@@ -53,4 +75,10 @@ class Email(models.Model):
     )
 
     def __str__(self):
+        """
+        Возвращает строковое представление объекта Email.
+
+        Returns:
+            str: Тема письма, обрезанная до максимальной длины.
+        """
         return self.subject[: EmailConfig.ATTACHMENTS_MAX_LENGTH]

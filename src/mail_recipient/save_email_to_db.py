@@ -1,3 +1,4 @@
+"""Модуль save_email_to_db."""
 import logging
 
 from asgiref.sync import sync_to_async

@@ -1,3 +1,4 @@
+"""Приложение core."""
 from django.apps import AppConfig
 
 

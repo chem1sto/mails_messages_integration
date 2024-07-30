@@ -1,3 +1,13 @@
+"""
+ASGI конфиг для проекта test_mails_message_integration.
+
+Он предоставляет вызываемый ASGI как переменную уровня модуля с именем
+ «application».
+
+Дополнительная информация об этом файле доступна по ссылке
+https://docs.djangoproject.com/en/stable/howto/deployment/asgi/
+"""
+
 import os
 
 from channels.auth import AuthMiddlewareStack

@@ -1,11 +1,8 @@
+"""Функции для форматирования путей и названий файлов."""
 import os
 import re
 
-from core.constants import (
-    ATTACHMENTS,
-    ATTACHMENTS_MAX_LENGTH,
-    SRC,
-)
+from core.constants import ATTACHMENTS, ATTACHMENTS_MAX_LENGTH, SRC
 
 
 def format_file_or_folder_path(object_name: str) -> str:

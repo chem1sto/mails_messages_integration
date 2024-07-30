@@ -1,3 +1,4 @@
+"""Модуль fetch_emails."""
 import json
 from datetime import datetime, timedelta
 from email import policy
@@ -7,17 +8,17 @@ import aioimaplib
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
-    ATTACHMENTS,
     ALL,
-    BAD,
+    ATTACHMENTS,
     AUTH_FAILED_ERROR_MESSAGE,
     AUTH_FAILED_LOGGER_ERROR_MESSAGE,
+    BAD,
     CURRENT_GMT,
     DATE,
     DATETIME_FORMAT,
-    ERROR,
-    EMAIL_LIST,
     EMAIL,
+    EMAIL_LIST,
+    ERROR,
     FETCH_EMAILS_COMPLETE,
     FILENAME,
     FROM,
@@ -29,29 +30,29 @@ from core.constants import (
     NO_MESSAGES_TO_PROCESS_LOGGER_INFO,
     OK,
     PARSING_MAIL_LOGGER_ERROR_MESSAGE,
-    RFC822_FORMAT,
     RECEIVE_MAIL_ERROR_MESSAGE,
     RECEIVED,
+    RFC822_FORMAT,
     SEARCH_MAILS_ERROR_MESSAGE,
     SEARCH_MAILS_LOGGER_ERROR_MESSAGE,
     SELECT_INBOX_ERROR_MESSAGE,
     SELECT_INBOX_LOGGER_ERROR_MESSAGE,
     SUBJECT,
     TEXT,
-    TOTAL_EMAILS,
     TOTAL,
+    TOTAL_EMAILS,
     TYPE,
     URL,
 )
 from core.logging_config import setup_fetch_emails_logging
 from core.utils import (
-    get_text_from_message,
     get_attachments_from_message,
+    get_text_from_message,
     serialize_datetime,
 )
 from email_account.models import EmailAccount
 from mail_recipient.models import Email
-from mail_recipient.utils import save_email_to_db
+from mail_recipient.save_email_to_db import save_email_to_db
 
 fetch_emails_logger = setup_fetch_emails_logging()
 
@@ -63,8 +64,29 @@ async def fetch_emails(
     port: str,
 ):
     """
-    Подключение к почтовому серверу и получение данных электронных писем для
-    указанной электронной почты. Вывод полученных писем через consumer.
+    Подключение к почтовому серверу и получение данных электронных писем.
+
+    Эта функция выполняет следующие действия:
+    1. Подключается к почтовому серверу IMAP.
+    2. Аутентифицирует пользователя с использованием предоставленных
+    учетных данных.
+    3. Выбирает папку "INBOX".
+    4. Ищет все письма в папке "INBOX".
+    5. Получает и обрабатывает электронные письма, сохраняя их в базу
+    данных и отправляя через WebSocket.
+    6. Логирует результаты выполнения.
+
+    Атрибуты:
+        consumer (AsyncWebsocketConsumer): Объект WebSocket consumer для
+    отправки данных клиенту.
+        email_account (EmailAccount): Объект учетной записи электронной
+    почты.
+        host (str): Хост для вложений.
+        port (str): Порт для вложений.
+
+    Вызывает ошибку:
+        Exception: В случае ошибок аутентификации, выбора папки, поиска
+    или получения писем.
     """
     imap_server = "imap.gmail.com"
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
