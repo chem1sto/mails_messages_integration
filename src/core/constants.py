@@ -2,6 +2,7 @@
 ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
+AT = "@"
 ATTACHMENT_PATH = "http://{host}:{port}/attachments/{subfolder}/{filename}"
 ATTACHMENTS = "attachments"
 ATTACHMENTS_MAX_LENGTH = 200

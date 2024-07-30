@@ -9,6 +9,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
     ALL,
+    AT,
     ATTACHMENTS,
     AUTH_FAILED_ERROR_MESSAGE,
     AUTH_FAILED_LOGGER_ERROR_MESSAGE,
@@ -89,7 +90,7 @@ async def fetch_emails(
         Exception: В случае ошибок аутентификации, выбора папки, поиска
     или получения писем.
     """
-    email_domain = email_account.email.split("@")[1]
+    email_domain = email_account.email.split(AT)[1]
     imap_server = IMAP_SERVER.format(email_domain=email_domain)
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
     await imap.wait_hello_from_server()
