@@ -89,9 +89,9 @@ async def fetch_emails(
         return {ERROR: SEARCH_MAILS_ERROR_MESSAGE}
     all_emails = search_result[1][0].split()
     await consumer.send(
-        text_data=json.dumps({TYPE: "total_emails", "total": len(all_emails[:100])})
+        text_data=json.dumps({TYPE: "total_emails", "total": len(all_emails[:5])})
     )
-    for msg_id in all_emails[:100]:
+    for msg_id in all_emails[:5]:
         status, msg_data = await imap.fetch(msg_id.decode(), RFC822_FORMAT)
         if msg_id == b"":
             fetch_emails_logger.info(NO_MESSAGES_TO_PROCESS_LOGGER_INFO)

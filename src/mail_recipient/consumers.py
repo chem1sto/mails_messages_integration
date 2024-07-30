@@ -80,9 +80,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 host=host,
                 port=str(port),
             )
-            await self.send(
-                text_data=json.dumps({TYPE: EMAIL_LIST, EMAILS: [email]})
-            )
         except TimeoutError:
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
             return await self.send(
