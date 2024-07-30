@@ -22,6 +22,7 @@ from core.constants import (
     FETCH_EMAILS_COMPLETE,
     FILENAME,
     FROM,
+    IMAP_SERVER,
     INBOX,
     INDEX,
     MESSAGE,
@@ -88,7 +89,8 @@ async def fetch_emails(
         Exception: В случае ошибок аутентификации, выбора папки, поиска
     или получения писем.
     """
-    imap_server = "imap.gmail.com"
+    email_domain = email_account.email.split("@")[1]
+    imap_server = IMAP_SERVER.format(email_domain=email_domain)
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
     await imap.wait_hello_from_server()
     login_result = await imap.login(
