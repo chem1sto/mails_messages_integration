@@ -11,8 +11,8 @@ SECRET_KEY = config("SECRET_KEY", default="0123456789")
 
 DEBUG = config("DEBUG", default="True", cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost").split(
-    ", "
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(
+    ","
 )
 
 INSTALLED_APPS = [
@@ -113,6 +113,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 ATTACHMENTS_URL = "/attachments/"
 ATTACHMENTS_ROOT = os.path.join(BASE_DIR, "attachments")
