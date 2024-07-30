@@ -91,8 +91,8 @@ async def fetch_emails(
         Exception: В случае ошибок аутентификации, выбора папки, поиска
     или получения писем.
     """
-    imap_server = IMAP_DOMAIN_SERVER.format(
-        email_domain=email_account.email.split(AT)[1]
+    imap_server = IMAP_DOMAIN_SERVER.get(
+        email_account.email.split(AT)[1], None
     )
     imap = aioimaplib.IMAP4_SSL(host=imap_server)
     await imap.wait_hello_from_server()

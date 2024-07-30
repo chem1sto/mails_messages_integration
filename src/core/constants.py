@@ -37,7 +37,15 @@ FILENAME = "filename"
 FORBIDDEN_CHARS = r" @<>\"\'#%{}|\\^~[]`"
 FORM = "form"
 FROM = "from"
-IMAP_DOMAIN_SERVER = "imap.{email_domain}"
+IMAP_DOMAIN_SERVER = {
+    "gmail.com": "imap.gmail.com",
+    "yandex.ru": "imap.yandex.ru",
+    "mail.ru": "imap.mail.ru",
+    "inbox.ru": "imap.mail.ru",
+    "bk.ru": "imap.mail.ru",
+    "list.ru": "imap.mail.ru",
+}
+IMAP_DOMAINS_MAIL_RU = ["mail.ru", "inbox.ru", "bk.ru", "list.ru"]
 INBOX = "INBOX"
 INDEX = "index"
 NO_MESSAGES_TO_PROCESS_LOGGER_INFO = "Нет сообщений для обработки"
