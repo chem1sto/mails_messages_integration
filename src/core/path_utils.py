@@ -26,7 +26,10 @@ def format_file_or_folder_path(object_name: str) -> str | None:
 def format_attachments_file_path(subject: str, filename: str) -> str | bytes:
     """Формирование пути и названия для загружаемого файла из вложений."""
     full_path = os.path.join(
-        SRC, ATTACHMENTS, format_file_or_folder_path(subject), filename
+        SRC,
+        ATTACHMENTS,
+        format_file_or_folder_path(subject),
+        format_file_or_folder_path(filename),
     )
     if len(full_path) > ATTACHMENTS_MAX_LENGTH:
         subject = subject[
