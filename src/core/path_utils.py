@@ -14,7 +14,9 @@ def format_file_or_folder_path(object_name: str) -> str | None:
     """Формирование названий файлов и папок с разрешёнными в url символами."""
     if object_name is None:
         return object_name
-    if object_name > ATTACHMENTS_MAX_LENGTH:
+    if not isinstance(object_name, str):
+        object_name = str(object_name)
+    if len(object_name) > ATTACHMENTS_MAX_LENGTH:
         object_name = object_name[:ATTACHMENTS_MAX_LENGTH]
     for char in FORBIDDEN_CHARS:
         object_name = object_name.replace(char, "_")
