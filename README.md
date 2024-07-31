@@ -66,7 +66,7 @@
 2. Скачайте образ Redis и запустите контейнер:
    ```bash
    docker pull redis:latest
-   docker run -d --name redis-container -p 6379:6379 redis:latest
+   docker run -d --name redis -p 6379:6379 redis:latest
    ```
 3. Для запуска проекта перейдите в папку с файлом manage.py и выполните команды:
    ```bash
