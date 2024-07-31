@@ -21,6 +21,38 @@ from core.constants import (
 from core.path_utils import format_file_or_folder_path
 
 
+def cast_redis_hosts(value: str) -> tuple:
+    """
+    Преобразует строку в кортеж, содержащий хост и порт Redis.
+
+    Аргументы:
+    - value (str): Строка, содержащая хост и порт, разделенные запятой и
+    пробелом.
+
+    Возвращает:
+    - tuple: Кортеж, содержащий хост (str) и порт (int).
+    """
+    host, port = value.split(", ")
+    return tuple([host, int(port)])
+
+
+def decode_text(payload):
+    """
+    Декодирует текст с автоматическим определением кодировки.
+
+    Аргументы:
+        payload (bytes): Байтовый массив текста.
+
+    Возвращает:
+        str: Декодированный текст.
+    """
+    try:
+        return payload.decode()
+    except UnicodeDecodeError:
+        detected_encoding = chardet.detect(payload)
+        return payload.decode(detected_encoding[ENCODING])
+
+
 def get_attachments_from_message(
     message: Message, host: str, port: str
 ) -> list[dict[str, Any]]:
@@ -47,23 +79,6 @@ def get_attachments_from_message(
                 }
             )
     return attachments
-
-
-def decode_text(payload):
-    """
-    Декодирует текст с автоматическим определением кодировки.
-
-    Аргументы:
-        payload (bytes): Байтовый массив текста.
-
-    Возвращает:
-        str: Декодированный текст.
-    """
-    try:
-        return payload.decode()
-    except UnicodeDecodeError:
-        detected_encoding = chardet.detect(payload)
-        return payload.decode(detected_encoding[ENCODING])
 
 
 def get_text_from_message(message: Message) -> str:

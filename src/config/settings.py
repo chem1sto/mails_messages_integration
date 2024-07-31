@@ -5,14 +5,16 @@ from pathlib import Path
 
 from decouple import config
 
+from core.utils import cast_redis_hosts
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="0123456789")
 
 DEBUG = config("DEBUG", default="True", cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(
-    ","
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost").split(
+    ", "
 )
 
 INSTALLED_APPS = [
@@ -100,7 +102,13 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [
+                config(
+                    "REDIS_HOSTS",
+                    default="127.0.0.1, 6379",
+                    cast=cast_redis_hosts,
+                )
+            ],
         },
     },
 }
