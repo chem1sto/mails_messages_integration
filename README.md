@@ -58,12 +58,17 @@
     ```
 
 ### Запуск проекта в dev-режиме
-1. Скачайте образ Redis и запустите контейнер:
+1. Убедитесь, что docker и docker compose установлен:
+    ```bash
+   docker --version
+    ```
+    Инструмент Docker engine можно установить с [этого официального сайта](https://docs.docker.com/engine/install/)
+2. Скачайте образ Redis и запустите контейнер:
    ```bash
    docker pull redis:latest
    docker run -d --name redis-container -p 6379:6379 redis:latest
    ```
-2. Для запуска проекта в папке с файлом manage.py выполните команды:
+3. Для запуска проекта в папке с файлом manage.py выполните команды:
    ```bash
    cd ../test_mails_messages_integration/src/ &&
    python manage.py makemigrations &&
@@ -75,3 +80,7 @@
 ### Автор
 
 [Васильев Владимир](https://github.com/chem1sto)
+
+## Лицензия
+
+Пожалуйста, ознакомьтесь с [MIT license](https://github.com/League-Of-Free-Internet/empty_project?tab=MIT-1-ov-file)
