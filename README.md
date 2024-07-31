@@ -58,15 +58,20 @@
     ```
 
 ### Запуск проекта в dev-режиме
+1. Скачайте образ Redis и запустите контейнер:
+   ```bash
+   docker pull redis:latest
+   docker run -d --name redis-container -p 6379:6379 redis:latest
+   ```
+2. Для запуска проекта в папке с файлом manage.py выполните команды:
+   ```bash
+   cd ../test_mails_messages_integration/src/ &&
+   python manage.py makemigrations &&
+   python manage.py migrate &&
+   python manage.py collectstatic --noinput
+   python manage.py runserver
+   ```
 
-В папке с файлом manage.py выполните команду:
-```
-cd ../test_mails_messages_integration/src/ &&
-python manage.py makemigrations &&
-python manage.py migrate &&
-python manage.py collectstatic --noinput
-python manage.py runserver
-```
 ### Автор
 
 [Васильев Владимир](https://github.com/chem1sto)
