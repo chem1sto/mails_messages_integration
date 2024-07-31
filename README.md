@@ -5,7 +5,9 @@
 
 - Python
 - Django
-- Django Rest Framework
+- Channels
+- Channels-redis
+- Daphne
 
 ## Как запустить проект
 
