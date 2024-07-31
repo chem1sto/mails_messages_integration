@@ -62,9 +62,10 @@
 В папке с файлом manage.py выполните команду:
 ```
 cd ../test_mails_messages_integration/src/ &&
-python manage.py runserver &&
+python manage.py makemigrations &&
 python manage.py migrate &&
 python manage.py collectstatic --noinput
+python manage.py runserver
 ```
 ### Автор
 
