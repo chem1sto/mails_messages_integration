@@ -83,4 +83,4 @@
 
 ## Лицензия
 
-Пожалуйста, ознакомьтесь с [MIT license](https://github.com/League-Of-Free-Internet/empty_project?tab=MIT-1-ov-file)
+Пожалуйста, ознакомьтесь с [MIT license](https://github.com/chem1sto/test_mails_messages_integration?tab=MIT-1-ov-file)
