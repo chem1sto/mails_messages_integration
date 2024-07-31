@@ -68,7 +68,7 @@
    docker pull redis:latest
    docker run -d --name redis-container -p 6379:6379 redis:latest
    ```
-3. Для запуска проекта в папке с файлом manage.py выполните команды:
+3. Для запуска проекта перейдите в папку с файлом manage.py и выполните команды:
    ```bash
    cd ../test_mails_messages_integration/src/ &&
    python manage.py makemigrations &&
