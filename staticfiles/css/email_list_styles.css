@@ -1,0 +1,84 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+#email-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+#email-table th, #email-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#email-table th {
+    background-color: #f2f2f2;
+}
+#email-table tbody {
+    display: block;
+    height: calc(100% - 50px);
+    overflow-y: auto;
+}
+#email-table thead, #email-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+#email-table thead {
+    width: calc(100% - 1em);
+}
+#email-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#progress-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+#progress-bar {
+    width: 0%;
+    height: 30px;
+    background-color: #4caf50;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+}
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#error-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#error-message {
+    color: red;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-right: 100px;
+    margin-left: 100px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
