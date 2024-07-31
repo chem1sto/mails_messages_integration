@@ -42,19 +42,20 @@
     SECRET_KEY="Секретный код Django"
     DEBUG="True или False"
     ALLOWED_HOSTS="IP (домен) вашего сервера"
-    DB_NAME=postgres
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=postgres
-    DB_HOST=db
+    REDIS_HOSTS = 127.0.0.1, 6379
+    DB_NAME="Название базы данных"
+    POSTGRES_USER="Пользователь базы данных"
+    POSTGRES_PASSWORD="Пароль пользователя"
+    DB_HOST="Хост базы данных"
     ```
 6. Добавьте ваши данные в файл .env.db (подробнее в .env.db.example)
     ```
-    DB_ENGINE=django.db.backends.postgresql
-    DB_NAME=postgres
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=postgres
-    DB_HOST=db
-    DB_PORT=5432
+    DB_ENGINE="backend django для работы с PostgreSQL"
+    DB_NAME="Название базы данных"
+    POSTGRES_USER="Пользователь базы данных"
+    POSTGRES_PASSWORD="Пароль пользователя"
+    DB_HOST="Хост базы данных"
+    DB_PORT="Порт хоста базы данных"
     ```
 
 ### Запуск проекта в dev-режиме
