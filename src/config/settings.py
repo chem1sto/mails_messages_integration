@@ -132,7 +132,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-SECURE_SSL_REDIRECT = not DEBUG
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "https://localhost"]
 
 LOGGING = {
     "version": 1,

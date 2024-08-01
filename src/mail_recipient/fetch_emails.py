@@ -22,7 +22,6 @@ from core.constants import (
     EMAIL_LIST,
     ERROR,
     FETCH_EMAILS_COMPLETE,
-    FILENAME,
     FROM,
     IMAP_DOMAIN_SERVER,
     INBOX,
@@ -45,17 +44,12 @@ from core.constants import (
     TOTAL,
     TOTAL_EMAILS,
     TYPE,
-    URL,
 )
 from core.logging_config import setup_fetch_emails_logging
-from core.utils import (
-    get_attachments_from_message,
-    get_text_from_message,
-    serialize_datetime,
-)
+from core.utils import get_attachments_from_message, get_text_from_message
 from email_account.models import EmailAccount
 from mail_recipient.models import Email
-from mail_recipient.save_email_to_db import save_email_to_db
+from mail_recipient.save_email import save_email
 
 fetch_emails_logger = setup_fetch_emails_logging()
 
@@ -154,36 +148,34 @@ async def fetch_emails(
             continue
         try:
             msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
-            attachments = get_attachments_from_message(msg, host, port)
-            message_id = msg[MESSAGE_ID]
-            subject = msg[SUBJECT.title()]
-            mail_from = msg[FROM.title()]
-            date = datetime.strptime(msg[DATE.title()], DATETIME_FORMAT)
-            received = datetime.strptime(
-                msg[RECEIVED.title()].split(";")[1].strip().split(" (")[0],
-                DATETIME_FORMAT,
-            )
-            text = get_text_from_message(msg)
-            await save_email_to_db(
+            email, attachments = await save_email(
                 Email(
-                    message_id=message_id,
-                    subject=subject,
-                    mail_from=mail_from,
-                    date=date,
-                    received=received,
-                    text=text,
+                    message_id=msg[MESSAGE_ID],
+                    subject=msg[SUBJECT.title()],
+                    mail_from=msg[FROM.title()],
+                    date=datetime.strptime(
+                        msg[DATE.title()], DATETIME_FORMAT
+                    ).isoformat(),
+                    received=datetime.strptime(
+                        msg[RECEIVED.title()]
+                        .split(";")[1]
+                        .strip()
+                        .split(" (")[0],
+                        DATETIME_FORMAT,
+                    ).isoformat(),
+                    text=get_text_from_message(msg),
                 ),
-                attachments,
+                get_attachments_from_message(msg),
+                host,
+                port,
             )
             email_data = {
-                SUBJECT: subject,
-                FROM: mail_from,
-                DATE: serialize_datetime(date),
-                RECEIVED: serialize_datetime(received),
-                TEXT: text,
-                ATTACHMENTS: [
-                    {FILENAME: a[FILENAME], URL: a[URL]} for a in attachments
-                ],
+                SUBJECT: email.subject,
+                FROM: email.mail_from,
+                DATE: email.date,
+                RECEIVED: email.received,
+                TEXT: email.text,
+                ATTACHMENTS: attachments,
             }
             await consumer.send(
                 text_data=json.dumps({TYPE: EMAIL_LIST, EMAIL: [email_data]})

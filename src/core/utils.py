@@ -1,24 +1,18 @@
 """Функции для получения корректных данных из электронных писем."""
 
-from datetime import datetime
 from email.message import Message
 from typing import Any
 
 import chardet
 
 from core.constants import (
-    ATTACHMENT_PATH,
     CONTENT,
     CONTENT_DISPOSITION,
     ENCODING,
     FILENAME,
     MULTIPART,
-    SERIALIZE_DATETIME_ERROR_MESSAGE,
-    SUBJECT,
     TEXT_PLANE,
-    URL,
 )
-from core.path_utils import format_file_or_folder_path
 
 
 def cast_redis_hosts(value: str) -> tuple:
@@ -54,7 +48,7 @@ def decode_text(payload):
 
 
 def get_attachments_from_message(
-    message: Message, host: str, port: str
+    message: Message,  # host: str, port: str
 ) -> list[dict[str, Any]]:
     """Извлечение прикреплённых файлов из сообщения."""
     attachments = []
@@ -70,12 +64,6 @@ def get_attachments_from_message(
                 {
                     FILENAME: filename,
                     CONTENT: content,
-                    URL: ATTACHMENT_PATH.format(
-                        host=host,
-                        port=port,
-                        subfolder=format_file_or_folder_path(message[SUBJECT]),
-                        filename=format_file_or_folder_path(filename),
-                    ),
                 }
             )
     return attachments
@@ -96,10 +84,3 @@ def get_text_from_message(message: Message) -> str:
             payload = message.get_payload(decode=True)
             text += decode_text(payload)
     return text
-
-
-def serialize_datetime(obj: datetime) -> str:
-    """Сериализация объектов datetime в строки формата ISO."""
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-    raise TypeError(SERIALIZE_DATETIME_ERROR_MESSAGE)

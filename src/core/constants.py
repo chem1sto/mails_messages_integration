@@ -4,9 +4,8 @@ ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
 AT = "@"
-ATTACHMENT_PATH = "http://{host}:{port}/attachments/{subfolder}/{filename}"
+ATTACHMENT_PATH = "http://{host}:{port}/attachments/{filename}"
 ATTACHMENTS = "attachments"
-ATTACHMENTS_MAX_LENGTH = 255
 BAD = "BAD"
 AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данные пользователя"
 AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
@@ -27,14 +26,12 @@ EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная поч
 EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
     "Нет электронной почты в text_data_json: %s"
 )
-EMAILS = "emails"
 ENCODING = "encoding"
 ERROR = "error"
 FETCH_EMAILS = "fetch_emails"
 FETCH_EMAILS_COMPLETE = "Получение писем закончено %s"
 FILE_NOT_FOUND = "Файл {filename} не найден"
 FILENAME = "filename"
-FORBIDDEN_CHARS = r" @<>\"\'#%{}|\\^~[]`"
 FORM = "form"
 FROM = "from"
 IMAP_DOMAIN_SERVER = {
@@ -45,7 +42,6 @@ IMAP_DOMAIN_SERVER = {
     "bk.ru": "imap.mail.ru",
     "list.ru": "imap.mail.ru",
 }
-IMAP_DOMAINS_MAIL_RU = ["mail.ru", "inbox.ru", "bk.ru", "list.ru"]
 INBOX = "INBOX"
 INDEX = "index"
 NO_MESSAGES_TO_PROCESS_LOGGER_INFO = "Нет сообщений для обработки"
@@ -76,8 +72,6 @@ SEARCH_MAILS_LOGGER_ERROR_MESSAGE = "Ошибка при поиске писем
 SERVER = "server"
 SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтового ящика"
 SELECT_INBOX_LOGGER_ERROR_MESSAGE = "Ошибка при выборе почтового ящика: %s"
-SERIALIZE_DATETIME_ERROR_MESSAGE = "Переданные данные нельзя сериализовать."
-SRC = "src"
 SUBJECT = "subject"
 TEXT = "text"
 TEXT_PLANE = "text/plain"
@@ -96,6 +90,14 @@ UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE = (
 URL = "url"
 
 
+class AttachmentConfig:
+    """Настройки для модели Attachments."""
+
+    ATTACHMENT_FILENAME_MAX_LENGTH = 255
+    ATTACHMENT_PATH_MAX_LENGTH = 150
+    ATTACHMENT_VERBOSE_NAME = "Вложение"
+
+
 class EmailConfig:
     """Настройки для модели Email."""
 
@@ -108,8 +110,6 @@ class EmailConfig:
     RECEIVED_VERBOSE_NAME = "Дата отправки письма"
     TEXT_MAX_LENGTH = 100
     TEXT_VERBOSE_NAME = "Описание или текст письма"
-    ATTACHMENTS_MAX_LENGTH = 150
-    ATTACHMENTS_VERBOSE_NAME = "Вложения"
 
 
 class EmailAccountConfig:
