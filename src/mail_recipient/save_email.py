@@ -8,7 +8,8 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
 from core.constants import (
-    ATTACHMENT_PATH,
+    ATTACHMENT_FILE_PATH,
+    ATTACHMENT_URL_PATH,
     ATTACHMENTS,
     CONTENT,
     DATE,
@@ -58,7 +59,9 @@ async def save_email(
             filename = attachment[FILENAME]
             content = attachment[CONTENT]
             content_file = ContentFile(content)
-            file_path = f"{email_instance.subject}/{filename}"
+            file_path = ATTACHMENT_FILE_PATH.format(
+                subfolder=email_instance.subject, filename=filename
+            )
             await sync_to_async(default_storage.save)(file_path, content_file)
             file_url = await sync_to_async(default_storage.url)(file_path)
             await sync_to_async(Attachment.objects.create)(
@@ -70,10 +73,10 @@ async def save_email(
             attachments_with_url.append(
                 {
                     FILENAME: filename,
-                    URL: ATTACHMENT_PATH.format(
+                    URL: ATTACHMENT_URL_PATH.format(
                         host=host,
                         port=port,
-                        filename=file_path.split(ATTACHMENTS)[0],
+                        filename=file_path.split(ATTACHMENTS)[1],
                     ),
                 }
             )
