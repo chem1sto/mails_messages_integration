@@ -4,7 +4,7 @@ ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
 AT = "@"
-ATTACHMENT_FILE_PATH = "src/attachments/{subfolder}/{filename}"
+ATTACHMENT_FILE_PATH = "src/attachments/"
 ATTACHMENT_URL_PATH = "http://{host}:{port}/attachments/{filename}"
 ATTACHMENTS_FOR_URL = "attachments/"
 ATTACHMENTS = "attachments"
@@ -36,6 +36,7 @@ FILE_NOT_FOUND = "Файл {filename} не найден"
 FILENAME = "filename"
 FORM = "form"
 FROM = "from"
+HASHED_SUBJECT_MAX_LENGTH = 16
 IMAP_DOMAIN_SERVER = {
     "gmail.com": "imap.gmail.com",
     "yandex.ru": "imap.yandex.ru",

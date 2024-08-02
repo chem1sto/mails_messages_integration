@@ -149,7 +149,7 @@ async def fetch_emails(
         try:
             msg = BytesParser(policy=policy.default).parsebytes(msg_data[1])
             email, attachments = await save_email(
-                Email(
+                email=Email(
                     message_id=msg[MESSAGE_ID],
                     subject=msg[SUBJECT.title()],
                     mail_from=msg[FROM.title()],
@@ -165,9 +165,10 @@ async def fetch_emails(
                     ).isoformat(),
                     text=get_text_from_message(msg),
                 ),
-                get_attachments_from_message(msg),
-                host,
-                port,
+                attachments=get_attachments_from_message(msg),
+                email_account=email_account,
+                host=host,
+                port=port,
             )
             email_data = {
                 SUBJECT: email.subject,

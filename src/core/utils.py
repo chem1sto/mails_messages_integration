@@ -1,5 +1,6 @@
 """Функции для получения корректных данных из электронных писем."""
 
+import hashlib
 from email.message import Message
 from typing import Any
 
@@ -10,6 +11,7 @@ from core.constants import (
     CONTENT_DISPOSITION,
     ENCODING,
     FILENAME,
+    HASHED_SUBJECT_MAX_LENGTH,
     MULTIPART,
     TEXT_PLANE,
 )
@@ -84,3 +86,19 @@ def get_text_from_message(message: Message) -> str:
             payload = message.get_payload(decode=True)
             text += decode_text(payload)
     return text
+
+
+def sanitize_and_truncate_filename(filename, max_length):
+    """Создание безопасного имени файла, не превышающего max_length."""
+    sanitized_filename = "".join(
+        c for c in filename if c.isalnum() or c in " .-_"
+    )
+    return sanitized_filename[:max_length]
+
+
+def generate_subfolder_name(subject):
+    """Создание хэшированного имени подпапки на основе темы письма."""
+    hashed_subject = hashlib.sha256(subject.encode()).hexdigest()[
+        :HASHED_SUBJECT_MAX_LENGTH
+    ]
+    return hashed_subject

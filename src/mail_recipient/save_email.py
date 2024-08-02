@@ -1,7 +1,7 @@
 """Модуль save_email."""
 
 import logging
-from typing import Any
+import os
 
 from asgiref.sync import sync_to_async
 from django.core.files.base import ContentFile
@@ -23,15 +23,22 @@ from core.constants import (
     SUBJECT,
     TEXT,
     URL,
+    AttachmentConfig,
 )
+from core.utils import generate_subfolder_name, sanitize_and_truncate_filename
+from email_account.models import EmailAccount
 from mail_recipient.models import Attachment, Email
 
 save_email_to_db_logger = logging.getLogger(SAVE_EMAIL_TO_DB)
 
 
 async def save_email(
-    email: Email, attachments: list, host: str, port: str
-) -> tuple[Any, list]:
+    email: Email,
+    attachments: list,
+    email_account: EmailAccount,
+    host: str,
+    port: str,
+) -> tuple[Email, list]:
     """
     Сохранение электронного письма в БД и на локальном диске.
 
@@ -67,23 +74,39 @@ async def save_email(
     attachments_with_url = []
     if attachments:
         for attachment in attachments:
-            filename = attachment[FILENAME]
-            content = attachment[CONTENT]
-            content_file = ContentFile(content)
-            file_path = ATTACHMENT_FILE_PATH.format(
-                subfolder=email_instance.subject, filename=filename
+            subfolder = generate_subfolder_name(email_instance.subject)
+            safe_filename_max_length = (
+                AttachmentConfig.ATTACHMENT_FILENAME_MAX_LENGTH
+                - sum(
+                    len(obj)
+                    for obj in [
+                        ATTACHMENT_FILE_PATH,
+                        email_account.email,
+                        subfolder,
+                    ]
+                )
             )
+            safe_filename = sanitize_and_truncate_filename(
+                attachment[FILENAME], max_length=safe_filename_max_length
+            )
+            file_path = os.path.join(
+                ATTACHMENT_FILE_PATH,
+                email_account.email,
+                subfolder,
+                safe_filename,
+            )
+            content_file = ContentFile(attachment[CONTENT])
             await sync_to_async(default_storage.save)(file_path, content_file)
             file_url = await sync_to_async(default_storage.url)(file_path)
             await sync_to_async(Attachment.objects.create)(
                 email=email_instance,
                 file=file_path,
-                filename=filename,
+                filename=safe_filename,
                 url=file_url,
             )
             attachments_with_url.append(
                 {
-                    FILENAME: filename,
+                    FILENAME: safe_filename,
                     URL: ATTACHMENT_URL_PATH.format(
                         host=host,
                         port=port,
@@ -93,7 +116,7 @@ async def save_email(
             )
             save_email_to_db_logger.info(
                 SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,
-                filename,
+                safe_filename,
                 email.message_id,
             )
     save_email_to_db_logger.info(SAVE_EMAIL_TO_DB_SUCCESS, email.message_id)
