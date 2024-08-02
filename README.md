@@ -18,7 +18,7 @@
 ознакомится по следующим ссылкам:
 - Mail.ru: https://help.mail.ru/mail/security/protection/external/
 - Yandex.ru: https://yandex.ru/support/id/authorization/app-passwords.html
-- Gmail.com: https://support.google.com/mail/answer/185833?hl=ru
+- Gmail.com: https://support.google.com/mail/answer/185833?hl=ru  
 Получить пароль приложения для своего аккаунта можно по ссылкам:
 - Mail.ru: https://account.mail.ru/user/2-step-auth/passwords/
 - Yandex.ru: https://id.yandex.ru/security/app-passwords
