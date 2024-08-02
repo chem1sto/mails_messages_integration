@@ -9,6 +9,21 @@
 - Channels-redis
 - Daphne
 
+## О проекте
+В данном проекте реализован интерфейс для получения всех электронных писем с
+вложениями с самых популярных почтовых сервисов gmail.com, yandex.ru, mail.ru.
+Для подключения к почтовому сервису нужно создать специальный пароль почтового
+приложения от аккаунта, на котором настроена двухэтапная авторизация.
+С инструкциями по созданию специального пароля для приложения почты можно
+ознакомится по следующим ссылкам:
+- Mail.ru: https://help.mail.ru/mail/security/protection/external/
+- Yandex.ru: https://yandex.ru/support/id/authorization/app-passwords.html
+- Gmail.com: https://support.google.com/mail/answer/185833?hl=ru
+Получить пароль приложения для своего аккаунта можно по ссылкам:
+- Mail.ru: https://account.mail.ru/user/2-step-auth/passwords/
+- Yandex.ru: https://id.yandex.ru/security/app-passwords
+- Gmail.com: https://myaccount.google.com/apppasswords
+
 ## Как запустить проект
 
 1. Клонировать репозиторий и перейти в него в командной строке:

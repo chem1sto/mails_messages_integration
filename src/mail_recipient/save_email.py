@@ -32,7 +32,18 @@ save_email_to_db_logger = logging.getLogger(SAVE_EMAIL_TO_DB)
 async def save_email(
     email: Email, attachments: list, host: str, port: str
 ) -> tuple[Any, list]:
-    """Сохранение электронного письма в БД и на локальном диске."""
+    """
+    Сохранение электронного письма в БД и на локальном диске.
+
+    Атрибуты:
+        email (Email): Объект электронного письма.
+        attachments (list): Список вложений.
+        host (str): Хост для вложений.
+        port (str): Порт для вложений.
+
+    Возвращает:
+        tuple: Кортеж, содержащий объект Email и список вложений с URL.
+    """
     if not email.subject:
         email.subject = NO_SUBJECT
     email_instance, created = await Email.objects.aget_or_create(
