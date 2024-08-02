@@ -8,8 +8,8 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
 специальный пароль почтового приложения от аккаунта, на котором настроена
 двухэтапная авторизация.
 
-&ensp; &nbsp; С инструкциями по созданию специального пароля для приложения почты можно
-ознакомиться по следующим ссылкам:
+&ensp; &nbsp; С инструкциями по созданию специального пароля для приложения
+почты можно ознакомиться по следующим ссылкам:
 - Mail.ru: https://help.mail.ru/mail/security/protection/external/
 - Yandex.ru: https://yandex.ru/support/id/authorization/app-passwords.html
 - Gmail.com: https://support.google.com/mail/answer/185833?hl=ru
