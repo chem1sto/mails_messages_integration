@@ -10,7 +10,7 @@ from django.core.files.storage import default_storage
 from core.constants import (
     ATTACHMENT_FILE_PATH,
     ATTACHMENT_URL_PATH,
-    ATTACHMENTS,
+    ATTACHMENTS_FOR_URL,
     CONTENT,
     DATE,
     FILENAME,
@@ -87,7 +87,7 @@ async def save_email(
                     URL: ATTACHMENT_URL_PATH.format(
                         host=host,
                         port=port,
-                        filename=file_path.split(ATTACHMENTS)[1],
+                        filename=file_path.split(ATTACHMENTS_FOR_URL)[1],
                     ),
                 }
             )

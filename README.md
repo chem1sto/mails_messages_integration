@@ -3,16 +3,16 @@
 
 ## О проекте
 &ensp; &nbsp; В данном проекте реализован интерфейс для получения всех
-электронных писем с вложениями с самых популярных почтовых сервисов gmail.com, 
-yandex.ru, mail.ru. Для подключения к почтовому сервису нужно создать 
-специальный пароль почтового приложения от аккаунта, на котором настроена 
+электронных писем с вложениями с самых популярных почтовых сервисов gmail.com,
+yandex.ru, mail.ru. Для подключения к почтовому сервису нужно создать
+специальный пароль почтового приложения от аккаунта, на котором настроена
 двухэтапная авторизация.
 
 &ensp; &nbsp; С инструкциями по созданию специального пароля для приложения почты можно
 ознакомиться по следующим ссылкам:
 - Mail.ru: https://help.mail.ru/mail/security/protection/external/
 - Yandex.ru: https://yandex.ru/support/id/authorization/app-passwords.html
-- Gmail.com: https://support.google.com/mail/answer/185833?hl=ru  
+- Gmail.com: https://support.google.com/mail/answer/185833?hl=ru
 
 Получить пароль приложения для своего аккаунта можно по ссылкам:
 - Mail.ru: https://account.mail.ru/user/2-step-auth/passwords/
@@ -58,7 +58,7 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
     SECRET_KEY="Секретный код Django"
     DEBUG="True или False"
     ALLOWED_HOSTS="IP (домен) вашего сервера"
-    REDIS_HOSTS = 127.0.0.1, 6379
+    REDIS_HOSTS = "IP (домен) вашего сервера, порт 6379"
     DB_NAME="Название базы данных"
     POSTGRES_USER="Пользователь базы данных"
     POSTGRES_PASSWORD="Пароль пользователя"
