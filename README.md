@@ -1,14 +1,6 @@
 # Интеграция почтовых сообщений
 ## Тестовое задание на позицию "Backend-разработчик"
 
-## Технологии
-
-- Python
-- Django
-- Channels
-- Channels-redis
-- Daphne
-
 ## О проекте
 &ensp; &nbsp; В данном проекте реализован интерфейс для получения всех
 электронных писем с вложениями с самых популярных почтовых сервисов gmail.com, 
@@ -27,8 +19,14 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
 - Yandex.ru: https://id.yandex.ru/security/app-passwords
 - Gmail.com: https://myaccount.google.com/apppasswords
 
-## Как запустить проект
+## Технологии
+- Python
+- Django
+- Channels
+- Channels-redis
+- Daphne
 
+## Как запустить проект
 1. Клонировать репозиторий и перейти в него в командной строке:
     ```bash
     git clone git@github.com:chem1sto/test_mails_messages_integration.git
@@ -97,9 +95,7 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
    ```
 
 ## Автор
-
 [Васильев Владимир](https://github.com/chem1sto)
 
 ## Лицензия
-
 Пожалуйста, ознакомьтесь с [MIT license](https://github.com/chem1sto/test_mails_messages_integration?tab=MIT-1-ov-file)
