@@ -56,7 +56,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
 
     async def receive(
         self, text_data: Any = None, bytes_data: Any = None
-    ) -> Coroutine[Any, Any, None]:
+    ) -> Coroutine[Any, Any, None] | None:
         """
         Обрабатывает входящие сообщения от клиента.
 
@@ -82,6 +82,9 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         try:
             text_data_json = json.loads(text_data)
             action = text_data_json.get(ACTION)
+            if action == "CLOSE_CONNECTION":
+                await self.close()
+                return
             if action != FETCH_EMAILS:
                 consumer_logger.error(
                     UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE, action
@@ -126,7 +129,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 text_data=json.dumps({TYPE: ERROR, MESSAGE: str(e)})
             )
 
-    async def disconnect(self, close_code: Any) -> Coroutine[Any, Any, None]:
+    async def disconnect(self, close_code: Any) -> None:
         """
         Закрывает WebSocket-соединение.
 
@@ -139,4 +142,4 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         Возвращает:
             Coroutine[Any, Any, None]: Асинхронная корутина.
         """
-        pass
+        await self.close(close_code)

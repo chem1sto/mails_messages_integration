@@ -28,6 +28,7 @@ from core.constants import (
     INDEX,
     MESSAGE,
     MESSAGE_ID,
+    NEW_DATETIME_FORMAT,
     NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE,
     NO_MESSAGES_TO_PROCESS_LOGGER_INFO,
     OK,
@@ -153,16 +154,14 @@ async def fetch_emails(
                     message_id=msg[MESSAGE_ID],
                     subject=msg[SUBJECT.title()],
                     mail_from=msg[FROM.title()],
-                    date=datetime.strptime(
-                        msg[DATE.title()], DATETIME_FORMAT
-                    ).isoformat(),
+                    date=datetime.strptime(msg[DATE.title()], DATETIME_FORMAT),
                     received=datetime.strptime(
                         msg[RECEIVED.title()]
                         .split(";")[1]
                         .strip()
                         .split(" (")[0],
                         DATETIME_FORMAT,
-                    ).isoformat(),
+                    ),
                     text=get_text_from_message(msg),
                 ),
                 attachments=get_attachments_from_message(msg),
@@ -173,8 +172,8 @@ async def fetch_emails(
             email_data = {
                 SUBJECT: email.subject,
                 FROM: email.mail_from,
-                DATE: email.date,
-                RECEIVED: email.received,
+                DATE: email.date.strftime(NEW_DATETIME_FORMAT),
+                RECEIVED: email.received.strftime(NEW_DATETIME_FORMAT),
                 TEXT: email.text,
                 ATTACHMENTS: attachments,
             }

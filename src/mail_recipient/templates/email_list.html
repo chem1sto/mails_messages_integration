@@ -6,11 +6,12 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/email_list_styles.css' %}">
     <script>
+        let ws;
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
             const email = urlParams.get("email");
             if (email) {
-                const ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
+                ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
                 let totalEmails = 0;
                 let loadedEmails = 0;
                 ws.onopen = () => {
@@ -25,12 +26,12 @@
                         const emails = data.email;
                         emails.forEach(email => {
                             const row = $("<tr>");
-                            row.append($("<td>").text(email.subject));
-                            row.append($("<td>").text(email.from));
-                            row.append($("<td>").text(email.date));
-                            row.append($("<td>").text(email.received));
+                            row.append($("<td>").addClass("centered").text(email.subject));
+                            row.append($("<td>").addClass("centered").text(email.from));
+                            row.append($("<td>").addClass("centered").text(email.date));
+                            row.append($("<td>").addClass("centered").text(email.received));
                             row.append($("<td>").text(email.text));
-                            const attachmentsCell = $("<td>");
+                            const attachmentsCell = $("<td>").addClass("centered");
                             if (email.attachments && email.attachments.length > 0) {
                                 email.attachments.forEach(attachment => {
                                     const attachmentLink = $("<a>")
@@ -60,12 +61,18 @@
                 $("#progress-bar").text(`${progress.toFixed(2)}%`);
             }
         });
+        function closeWebSocketAndNavigate() {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: "CLOSE_CONNECTION" }));
+            }
+            window.location.href = "/";
+        }
     </script>
 </head>
 <body>
     <div class="header-container">
         <h1>Список электронных писем</h1>
-        <button onclick="window.location.href='/'">Вернуться к стартовой странице</button>
+        <button onclick="return closeWebSocketAndNavigate();">Вернуться к стартовой странице</button>
     </div>
     <div id="error-container">
         <div id="error-message" class="error"></div>
