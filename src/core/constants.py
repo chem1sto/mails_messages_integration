@@ -11,6 +11,7 @@ ATTACHMENTS = "attachments"
 BAD = "BAD"
 AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данные пользователя"
 AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
+CLOSE_CONNECTION = "CLOSE_CONNECTION"
 CONTENT = "content"
 CONTENT_DISPOSITION = "Content-Disposition"
 CURRENT_GMT = 3

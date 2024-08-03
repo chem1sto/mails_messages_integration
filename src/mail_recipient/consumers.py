@@ -7,6 +7,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
     ACTION,
+    CLOSE_CONNECTION,
     EMAIL,
     EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
@@ -82,7 +83,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         try:
             text_data_json = json.loads(text_data)
             action = text_data_json.get(ACTION)
-            if action == "CLOSE_CONNECTION":
+            if action == CLOSE_CONNECTION:
                 await self.close()
                 return
             if action != FETCH_EMAILS:
