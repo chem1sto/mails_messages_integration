@@ -55,7 +55,7 @@ $(document).ready(function() {
 });
 function closeWebSocketAndNavigate() {
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "close_connection" }));
+        ws.send(JSON.stringify({ action: "close_connection" }));
     }
     window.location.href = "/";
 }

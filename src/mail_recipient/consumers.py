@@ -1,5 +1,6 @@
 """Модуль consumers."""
 
+import asyncio
 import json
 from typing import Any, Coroutine
 
@@ -44,6 +45,15 @@ class EmailListConsumer(AsyncWebsocketConsumer):
     - receive: Обрабатывает входящие сообщения от клиента.
     - disconnect: Закрывает WebSocket-соединение.
     """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Инициализация экземпляра EmailListConsumer.
+
+        Инициализирует атрибут для хранения задачи выборки электронных писем.
+        """
+        super().__init__(*args, **kwargs)
+        self.fetch_task = None
 
     async def connect(self) -> Coroutine[Any, Any, None]:
         """
@@ -106,11 +116,13 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 )
                 raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
             host, port = self.scope[SERVER]
-            await fetch_emails(
-                consumer=self,
-                email_account=email_account,
-                host=host,
-                port=str(port),
+            self.fetch_task = asyncio.create_task(
+                fetch_emails(
+                    consumer=self,
+                    email_account=email_account,
+                    host=host,
+                    port=str(port),
+                )
             )
         except TimeoutError:
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
@@ -143,4 +155,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         Возвращает:
             Coroutine[Any, Any, None]: Асинхронная корутина.
         """
+        if self.fetch_task:
+            self.fetch_task.cancel()
         await self.close(close_code)
