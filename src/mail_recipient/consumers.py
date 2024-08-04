@@ -21,6 +21,7 @@ from core.constants import (
     EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
     ERROR,
     FETCH_EMAILS,
+    FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE,
     FETCH_EMAILS_COMPLETE,
     MESSAGE,
     MESSAGE_ID,
@@ -192,19 +193,25 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             host: Хост сервера.
             port: Порт сервера.
         """
-        for email_id in emails_id:
-            email_data = await read_email(
-                imap=imap,
-                email_account=email_account,
-                email_id=email_id,
-                host=host,
-                port=port,
+        try:
+            for email_id in emails_id:
+                email_data = await read_email(
+                    imap=imap,
+                    email_account=email_account,
+                    email_id=email_id,
+                    host=host,
+                    port=port,
+                )
+                await self.send(
+                    text_data=json.dumps(
+                        {TYPE: NEW_EMAIL, EMAIL_DATA: email_data}
+                    )
+                )
+                consumer_logger.info(EMAIL_DATA_SEND, MESSAGE_ID)
+        except asyncio.CancelledError:
+            consumer_logger.info(FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE)
+        finally:
+            consumer_logger.info(
+                FETCH_EMAILS_COMPLETE,
+                datetime.utcnow() + timedelta(hours=CURRENT_GMT),
             )
-            await self.send(
-                text_data=json.dumps({TYPE: NEW_EMAIL, EMAIL_DATA: email_data})
-            )
-            consumer_logger.info(EMAIL_DATA_SEND, email_data.get(MESSAGE_ID))
-        consumer_logger.info(
-            FETCH_EMAILS_COMPLETE,
-            datetime.utcnow() + timedelta(hours=CURRENT_GMT),
-        )

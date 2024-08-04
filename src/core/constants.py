@@ -37,6 +37,7 @@ EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE = (
 ENCODING = "encoding"
 ERROR = "error"
 FETCH_EMAILS = "fetch_emails"
+FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE = "Обработка писем отменена"
 FETCH_EMAILS_COMPLETE = "Получение писем закончено %s"
 FILE_NOT_FOUND = "Файл {filename} не найден"
 FILENAME = "filename"
