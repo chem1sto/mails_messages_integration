@@ -1,4 +1,3 @@
-console.log("Script loaded");
 let ws;
 $(document).ready(function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,7 +20,6 @@ $(document).ready(function() {
     };
 
     ws.onmessage = (event) => {
-        console.log("WebSocket message received:", event.data);
         const data = JSON.parse(event.data);
         if (data.type === "total_emails") {
             totalEmails = data.total;
