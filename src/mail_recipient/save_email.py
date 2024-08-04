@@ -96,7 +96,10 @@ async def save_email(
                 safe_filename,
             )
             content_file = ContentFile(attachment[CONTENT])
-            await sync_to_async(default_storage.save)(file_path, content_file)
+            if not await sync_to_async(default_storage.exists)(file_path):
+                await sync_to_async(default_storage.save)(
+                    file_path, content_file
+                )
             file_url = await sync_to_async(default_storage.url)(file_path)
             await sync_to_async(Attachment.objects.create)(
                 email=email_instance,
