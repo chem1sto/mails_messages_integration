@@ -28,7 +28,21 @@ $(document).ready(function() {
             const email = data.email_data;
             const row = $("<tr>");
             row.append($("<td>").text(email.subject));
-            row.append($("<td>").text(email.from));
+            const from = email.from;
+            const fromParts = from.match(/(.*?) <(.*?)>/);
+            const fromName = fromParts ? fromParts[1].trim() : from;
+            const fromEmail = fromParts ? fromParts[2].trim() : from;
+            const fromCell = $("<td>").append(
+                $("<div>").text(fromName),
+                $("<div>").append(
+                    $("<a>").attr("href", "#").text(fromEmail).on("click", function(e) {
+                        e.preventDefault();
+                        window.open(`mailto:${fromEmail}`, "_blank");
+                    })
+                )
+            );
+            row.append(fromCell);
+            row.append(fromCell);
             row.append($("<td>").addClass("centered").text(email.date));
             row.append($("<td>").addClass("centered").text(email.received));
             row.append($("<td>").text(email.text));

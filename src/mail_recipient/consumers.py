@@ -144,10 +144,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                     port=port,
                 )
             )
-            consumer_logger.info(
-                FETCH_EMAILS_COMPLETE,
-                datetime.utcnow() + timedelta(hours=CURRENT_GMT),
-            )
         except TimeoutError:
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
             return await self.send(
@@ -208,3 +204,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 text_data=json.dumps({TYPE: NEW_EMAIL, EMAIL_DATA: email_data})
             )
             consumer_logger.info(EMAIL_DATA_SEND, email_data.get(MESSAGE_ID))
+        consumer_logger.info(
+            FETCH_EMAILS_COMPLETE,
+            datetime.utcnow() + timedelta(hours=CURRENT_GMT),
+        )
