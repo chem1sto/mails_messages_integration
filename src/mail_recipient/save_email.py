@@ -95,8 +95,8 @@ async def save_email(
                 subfolder,
                 safe_filename,
             )
-            content_file = ContentFile(attachment[CONTENT])
             if not await sync_to_async(default_storage.exists)(file_path):
+                content_file = ContentFile(attachment[CONTENT])
                 await sync_to_async(default_storage.save)(
                     file_path, content_file
                 )
