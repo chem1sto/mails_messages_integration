@@ -139,7 +139,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 self.process_email(
                     imap=imap,
                     email_account=email_account,
-                    emails_id=emails_id,
+                    emails_id=emails_id[::-1],
                     host=host,
                     port=port,
                 )
