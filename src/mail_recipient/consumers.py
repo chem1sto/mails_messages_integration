@@ -5,11 +5,14 @@ import json
 from datetime import datetime, timedelta
 from typing import Any, Coroutine
 
+import aioimaplib
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
     ACTION,
     ALL_EMAILS_ID_RECEIVED_LOGGER_INFO,
+    CHECKED,
+    CHECKED_EMAIL_LOGGER_INFO_MESSAGE,
     CLOSE_CONNECTION,
     CURRENT_GMT,
     EMAIL,
@@ -26,6 +29,7 @@ from core.constants import (
     MESSAGE,
     MESSAGE_ID,
     NEW_EMAIL,
+    PROGRESS,
     SERVER,
     TIMEOUT_ERROR_MESSAGE,
     TIMEOUT_LOGGER_ERROR_MESSAGE,
@@ -38,7 +42,11 @@ from core.constants import (
 )
 from core.logging_config import setup_consumer_logging
 from email_account.models import EmailAccount
-from mail_recipient.fetch_emails import connect_and_get_emails, read_email
+from mail_recipient.fetch_emails import (
+    check_email,
+    connect_and_get_emails,
+    read_email,
+)
 
 consumer_logger = setup_consumer_logging()
 
@@ -140,7 +148,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 self.process_email(
                     imap=imap,
                     email_account=email_account,
-                    emails_id=emails_id[::-1],
+                    emails_id=emails_id,
                     host=host,
                     port=port,
                 )
@@ -149,10 +157,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
             return await self.send(
                 text_data=json.dumps(
-                    {
-                        TYPE: ERROR,
-                        MESSAGE: TIMEOUT_ERROR_MESSAGE,
-                    }
+                    {TYPE: ERROR, MESSAGE: TIMEOUT_ERROR_MESSAGE}
                 )
             )
         except Exception as e:
@@ -178,7 +183,12 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         await self.close(close_code)
 
     async def process_email(
-        self, imap, email_account, emails_id, host, port
+        self,
+        imap: aioimaplib.IMAP4_SSL,
+        email_account: EmailAccount,
+        emails_id: list,
+        host: str,
+        port: str,
     ) -> None:
         """
         Обрабатывает и отправляет данные электронных писем клиенту.
@@ -194,11 +204,25 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             port: Порт сервера.
         """
         try:
+            checked_emails_data = []
+            checked_email_counter = 0
             for email_id in emails_id:
+                checked_email_data = await check_email(imap, email_id)
+                checked_emails_data.append(checked_email_data)
+                checked_email_counter += 1
+                consumer_logger.info(
+                    CHECKED_EMAIL_LOGGER_INFO_MESSAGE, email_id
+                )
+                await self.send(
+                    text_data=json.dumps(
+                        {TYPE: PROGRESS, CHECKED: checked_email_counter}
+                    )
+                )
+            for checked_email_data in checked_emails_data:
                 email_data = await read_email(
                     imap=imap,
                     email_account=email_account,
-                    email_id=email_id,
+                    email_data=checked_email_data,
                     host=host,
                     port=port,
                 )
@@ -212,6 +236,10 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 )
         except asyncio.CancelledError:
             consumer_logger.info(FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE)
+        except Exception as e:
+            consumer_logger.error(
+                UNEXPECTED_LOGGER_ERROR_MESSAGE, str(e), exc_info=True
+            )
         finally:
             consumer_logger.info(
                 FETCH_EMAILS_COMPLETE_LOGGER_MESSAGE,
