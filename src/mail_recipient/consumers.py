@@ -16,13 +16,13 @@ from core.constants import (
     EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
     EMAIL_DATA,
-    EMAIL_DATA_SEND,
+    EMAIL_DATA_SEND_LOGGER_MESSAGE,
     EMAIL_REQUIRED_ERROR_MESSAGE,
     EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
     ERROR,
     FETCH_EMAILS,
     FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE,
-    FETCH_EMAILS_COMPLETE,
+    FETCH_EMAILS_COMPLETE_LOGGER_MESSAGE,
     MESSAGE,
     MESSAGE_ID,
     NEW_EMAIL,
@@ -207,11 +207,13 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                         {TYPE: NEW_EMAIL, EMAIL_DATA: email_data}
                     )
                 )
-                consumer_logger.info(EMAIL_DATA_SEND, MESSAGE_ID)
+                consumer_logger.info(
+                    EMAIL_DATA_SEND_LOGGER_MESSAGE, MESSAGE_ID
+                )
         except asyncio.CancelledError:
             consumer_logger.info(FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE)
         finally:
             consumer_logger.info(
-                FETCH_EMAILS_COMPLETE,
+                FETCH_EMAILS_COMPLETE_LOGGER_MESSAGE,
                 datetime.utcnow() + timedelta(hours=CURRENT_GMT),
             )

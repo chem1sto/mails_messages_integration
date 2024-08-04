@@ -27,7 +27,9 @@ EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE = (
     "Электронная почта в не найдена: %s"
 )
 EMAIL_DATA = "email_data"
-EMAIL_DATA_SEND = "Данные письма с message_id %s отправлены на страницу"
+EMAIL_DATA_SEND_LOGGER_MESSAGE = (
+    "Данные письма с message_id %s отправлены на страницу"
+)
 EMAIL_LIST_HTML = "email_list.html"
 EMAIL_LIST_REDIRECT = "/email_list/?email={email}"
 EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная почта"
@@ -38,7 +40,7 @@ ENCODING = "encoding"
 ERROR = "error"
 FETCH_EMAILS = "fetch_emails"
 FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE = "Обработка писем отменена"
-FETCH_EMAILS_COMPLETE = "Получение писем закончено %s"
+FETCH_EMAILS_COMPLETE_LOGGER_MESSAGE = "Получение писем закончено %s"
 FILE_NOT_FOUND = "Файл {filename} не найден"
 FILENAME = "filename"
 FORM = "form"
