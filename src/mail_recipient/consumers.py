@@ -37,7 +37,7 @@ from core.constants import (
 )
 from core.logging_config import setup_consumer_logging
 from email_account.models import EmailAccount
-from mail_recipient.fetch_emails import connect_to_and_get_emails, read_email
+from mail_recipient.fetch_emails import connect_and_get_emails, read_email
 
 consumer_logger = setup_consumer_logging()
 
@@ -127,7 +127,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE, email_account
                 )
                 raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
-            imap, total_emails, emails_id = await connect_to_and_get_emails(
+            imap, total_emails, emails_id = await connect_and_get_emails(
                 email_account=email_account,
             )
             await self.send(
