@@ -2,24 +2,34 @@
 
 import asyncio
 import json
+from datetime import datetime, timedelta
 from typing import Any, Coroutine
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from core.constants import (
     ACTION,
+    ALL_EMAILS_ID_RECEIVED_LOGGER_INFO,
     CLOSE_CONNECTION,
+    CURRENT_GMT,
     EMAIL,
     EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE,
+    EMAIL_DATA,
+    EMAIL_DATA_SEND,
     EMAIL_REQUIRED_ERROR_MESSAGE,
     EMAIL_REQUIRED_LOGGER_ERROR_MESSAGE,
     ERROR,
     FETCH_EMAILS,
+    FETCH_EMAILS_COMPLETE,
     MESSAGE,
+    MESSAGE_ID,
+    NEW_EMAIL,
     SERVER,
     TIMEOUT_ERROR_MESSAGE,
     TIMEOUT_LOGGER_ERROR_MESSAGE,
+    TOTAL,
+    TOTAL_EMAILS,
     TYPE,
     UNEXPECTED_LOGGER_ERROR_MESSAGE,
     UNSUPPORTED_ACTION_ERROR_MESSAGE,
@@ -27,7 +37,7 @@ from core.constants import (
 )
 from core.logging_config import setup_consumer_logging
 from email_account.models import EmailAccount
-from mail_recipient.fetch_emails import fetch_emails
+from mail_recipient.fetch_emails import connect_to_and_get_emails, read_email
 
 consumer_logger = setup_consumer_logging()
 
@@ -44,6 +54,8 @@ class EmailListConsumer(AsyncWebsocketConsumer):
     - connect: Принимает WebSocket-соединение.
     - receive: Обрабатывает входящие сообщения от клиента.
     - disconnect: Закрывает WebSocket-соединение.
+    - process_email: Обрабатывает и отправляет данные электронных писем
+    клиенту.
     """
 
     def __init__(self, *args, **kwargs):
@@ -67,7 +79,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
 
     async def receive(
         self, text_data: Any = None, bytes_data: Any = None
-    ) -> Coroutine[Any, Any, None] | None:
+    ) -> None:
         """
         Обрабатывает входящие сообщения от клиента.
 
@@ -115,14 +127,26 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                     EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE, email_account
                 )
                 raise ValueError(EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE)
+            imap, total_emails, emails_id = await connect_to_and_get_emails(
+                email_account=email_account,
+            )
+            await self.send(
+                text_data=json.dumps({TYPE: TOTAL_EMAILS, TOTAL: total_emails})
+            )
+            consumer_logger.info(ALL_EMAILS_ID_RECEIVED_LOGGER_INFO)
             host, port = self.scope[SERVER]
             self.fetch_task = asyncio.create_task(
-                fetch_emails(
-                    consumer=self,
+                self.process_email(
+                    imap=imap,
                     email_account=email_account,
+                    emails_id=emails_id,
                     host=host,
-                    port=str(port),
+                    port=port,
                 )
+            )
+            consumer_logger.info(
+                FETCH_EMAILS_COMPLETE,
+                datetime.utcnow() + timedelta(hours=CURRENT_GMT),
             )
         except TimeoutError:
             consumer_logger.error(TIMEOUT_LOGGER_ERROR_MESSAGE, exc_info=True)
@@ -142,7 +166,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 text_data=json.dumps({TYPE: ERROR, MESSAGE: str(e)})
             )
 
-    async def disconnect(self, close_code: Any) -> None:
+    async def disconnect(self, close_code: int) -> None:
         """
         Закрывает WebSocket-соединение.
 
@@ -150,11 +174,37 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         Он завершает соединение и выполняет необходимые действия по очистке.
 
         Аргументы:
-            close_code (Any): Код закрытия соединения.
-
-        Возвращает:
-            Coroutine[Any, Any, None]: Асинхронная корутина.
+            close_code (int): Код закрытия соединения.
         """
         if self.fetch_task:
             self.fetch_task.cancel()
         await self.close(close_code)
+
+    async def process_email(
+        self, imap, email_account, emails_id, host, port
+    ) -> None:
+        """
+        Обрабатывает и отправляет данные электронных писем клиенту.
+
+        Этот метод вызывается для каждого идентификатора электронного письма
+        и отправляет данные письма обратно клиенту через WebSocket.
+
+        Аргументы:
+            imap: Объект IMAP-соединения.
+            email_account: Учетная запись электронной почты.
+            emails_id: Список идентификаторов электронных писем.
+            host: Хост сервера.
+            port: Порт сервера.
+        """
+        for email_id in emails_id:
+            email_data = await read_email(
+                imap=imap,
+                email_account=email_account,
+                email_id=email_id,
+                host=host,
+                port=port,
+            )
+            await self.send(
+                text_data=json.dumps({TYPE: NEW_EMAIL, EMAIL_DATA: email_data})
+            )
+            consumer_logger.info(EMAIL_DATA_SEND, email_data.get(MESSAGE_ID))

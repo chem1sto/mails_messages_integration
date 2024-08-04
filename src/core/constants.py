@@ -3,12 +3,16 @@
 ACTION = "action"
 ADD_EMAIL_ACCOUNT_HTML = "add_email_account.html"
 ALL = "ALL"
+ALL_EMAILS_ID_RECEIVED_LOGGER_INFO = (
+    "Получены идентификаторы всех электронных писем и обновлен прогресс-баре"
+)
 AT = "@"
 ATTACHMENT_FILE_PATH = "src/attachments/"
 ATTACHMENT_URL_PATH = "http://{host}:{port}/attachments/{filename}"
 ATTACHMENTS_FOR_URL = "attachments/"
 ATTACHMENTS = "attachments"
 BAD = "BAD"
+BS4_PARSER = "html.parser"
 AUTH_FAILED_ERROR_MESSAGE = "Введены некорректные данные пользователя"
 AUTH_FAILED_LOGGER_ERROR_MESSAGE = "Ошибка аутентификации: %s"
 CLOSE_CONNECTION = "close_connection"
@@ -22,7 +26,8 @@ EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE = "Электронная почта не 
 EMAIL_ACCOUNT_NOT_FOUND_LOGGER_ERROR_MESSAGE = (
     "Электронная почта в не найдена: %s"
 )
-EMAIL_LIST = "email_list"
+EMAIL_DATA = "email_data"
+EMAIL_DATA_SEND = "Данные письма с message_id %s отправлены на страницу"
 EMAIL_LIST_HTML = "email_list.html"
 EMAIL_LIST_REDIRECT = "/email_list/?email={email}"
 EMAIL_REQUIRED_ERROR_MESSAGE = "Требуется электронная почта"
@@ -48,13 +53,14 @@ IMAP_DOMAIN_SERVER = {
 }
 INBOX = "INBOX"
 INDEX = "index"
-NO_MESSAGES_TO_PROCESS_LOGGER_INFO = "Нет сообщений для обработки"
+NO_MESSAGE_TO_PROCESS_LOGGER_INFO = "Нет письма для обработки"
 NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE = (
     "Неожиданная ошибка при получении письма %s: Недостаточно данных"
 )
 MAIL_FROM = "mail_from"
 MESSAGE = "message"
 MESSAGE_ID = "Message-ID"
+NEW_EMAIL = "new_email"
 REQUEST_METHOD = "POST"
 MULTIPART = "multipart"
 NEW_DATETIME_FORMAT = "%a, %d %b %Y %H:%M:%S"
@@ -79,6 +85,7 @@ SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтовог�
 SELECT_INBOX_LOGGER_ERROR_MESSAGE = "Ошибка при выборе почтового ящика: %s"
 SUBJECT = "subject"
 TEXT = "text"
+TEXT_HTML = "text/html"
 TEXT_PLANE = "text/plain"
 TIMEOUT_ERROR_MESSAGE = "Превышено время ожидания ответа"
 TIMEOUT_LOGGER_ERROR_MESSAGE = (
