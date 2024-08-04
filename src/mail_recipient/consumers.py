@@ -208,7 +208,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                     )
                 )
                 consumer_logger.info(
-                    EMAIL_DATA_SEND_LOGGER_MESSAGE, MESSAGE_ID
+                    EMAIL_DATA_SEND_LOGGER_MESSAGE, email_data.get(MESSAGE_ID)
                 )
         except asyncio.CancelledError:
             consumer_logger.info(FETCH_EMAILS_CANCELLED_LOGGER_MESSAGE)
