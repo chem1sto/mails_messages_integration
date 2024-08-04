@@ -27,8 +27,8 @@ $(document).ready(function() {
         } else if (data.type === "new_email") {
             const email = data.email_data;
             const row = $("<tr>");
-            row.append($("<td>").addClass("centered").text(email.subject));
-            row.append($("<td>").addClass("centered").text(email.from));
+            row.append($("<td>").text(email.subject));
+            row.append($("<td>").text(email.from));
             row.append($("<td>").addClass("centered").text(email.date));
             row.append($("<td>").addClass("centered").text(email.received));
             row.append($("<td>").text(email.text));
