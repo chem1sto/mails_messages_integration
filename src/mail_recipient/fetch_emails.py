@@ -23,10 +23,11 @@ from core.constants import (
     MESSAGE_ID,
     NEW_DATETIME_FORMAT,
     NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE,
-    NO_MESSAGE_TO_PROCESS_LOGGER_INFO,
+    NO_MESSAGE_TO_PROCESS_ERROR_MESSAGE,
+    NO_MESSAGE_TO_PROCESS_LOGGER_ERROR_MESSAGE,
     OK,
     PARSING_MAIL_LOGGER_ERROR_MESSAGE,
-    RECEIVE_MAIL_ERROR_MESSAGE,
+    RECEIVE_MAIL_LOGGER_ERROR_MESSAGE,
     RECEIVED,
     RFC822_FORMAT,
     SEARCH_MAILS_ERROR_MESSAGE,
@@ -104,52 +105,73 @@ async def connect_and_get_emails(
     return imap, len(all_emails_id), all_emails_id
 
 
-async def read_email(
+async def check_email(
     imap: aioimaplib.IMAP4_SSL,
-    email_account: EmailAccount,
-    email_id: list,
-    host: str,
-    port: str,
-) -> dict[str, str | list] | None:
+    email_id: bytes,
+) -> list[bytes, bytearray, bytes, bytes]:
     """
-    Чтение и обработка данных электронного письма.
-
-    Эта функция выполняет следующие действия:
-    1. Получает данные письма по его идентификатору.
-    2. Парсит данные письма.
-    3. Извлекает текст и вложения из письма.
-    4. Сохраняет письмо и вложения в базу данных.
-    5. Возвращает данные письма в виде словаря.
-    6. Логирует результаты выполнения.
+    Проверка и получение данных электронного письма по его идентификатору.
 
     Аргументы:
         imap (aioimaplib.IMAP4_SSL): Объект IMAP-соединения.
-        email_account (EmailAccount): Объект учетной записи электронной почты.
-        email_id (list): Идентификатор письма.
-        host (str): Хост для вложений.
-        port (str): Порт для вложений.
+        email_id (bytes): Идентификатор письма.
 
     Возвращает:
-        dict[str, str | list] | None: Словарь с данными письма или None в
-    случае ошибки.
+        list[bytes, bytearray, bytes, bytes]: Данные письма.
 
     Вызывает ошибку:
-        Exception: В случае ошибок при получении или парсинге письма.
+        aioimaplib.Error: В случае отсутствия письма или ошибки при получении
+    данных письма.
     """
     if email_id == b"":
-        fetch_emails_logger.info(NO_MESSAGE_TO_PROCESS_LOGGER_INFO)
-        return
+        fetch_emails_logger.error(
+            NO_MESSAGE_TO_PROCESS_LOGGER_ERROR_MESSAGE, email_id
+        )
+        raise aioimaplib.Error(NO_MESSAGE_TO_PROCESS_ERROR_MESSAGE)
     status, email_data = await imap.fetch(email_id.decode(), RFC822_FORMAT)
     if status == BAD:
         fetch_emails_logger.error(
-            RECEIVE_MAIL_ERROR_MESSAGE, email_id, email_data[1]
+            RECEIVE_MAIL_LOGGER_ERROR_MESSAGE, email_id, email_data[1]
         )
-        return
+        raise aioimaplib.Error(SELECT_INBOX_ERROR_MESSAGE)
     if len(email_data) < 2:
         fetch_emails_logger.error(
             NO_DATA_IN_MAIL_LOGGER_ERROR_MESSAGE, email_id
         )
-        return
+        raise aioimaplib.Error(SELECT_INBOX_ERROR_MESSAGE)
+    return email_data
+
+
+async def read_email(
+    imap: aioimaplib.IMAP4_SSL,
+    email_account: EmailAccount,
+    email_data: list[bytes, bytearray, bytes, bytes],
+    host: str,
+    port: str,
+) -> dict[str, str | list]:
+    """
+    Чтение и обработка данных электронного письма.
+
+    Эта функция выполняет следующие действия:
+    1. Парсит данные письма.
+    2. Извлекает текст и вложения из письма.
+    3. Сохраняет письмо и вложения в базу данных.
+    4. Возвращает данные письма в виде словаря.
+    5. Логирует результаты выполнения.
+
+    Аргументы:
+        imap (aioimaplib.IMAP4_SSL): Объект IMAP-соединения.
+        email_account (EmailAccount): Объект учетной записи электронной почты.
+        email_data (list[bytes, bytearray, bytes, bytes]): Данные письма.
+        host (str): Хост для вложений.
+        port (str): Порт для вложений.
+
+    Возвращает:
+        dict[str, str | list]: Словарь с данными письма.
+
+    Вызывает ошибку:
+        IndexError: В случае ошибок при парсинге письма.
+    """
     try:
         email_decoded_data = BytesParser(policy=policy.default).parsebytes(
             email_data[1]
@@ -188,6 +210,6 @@ async def read_email(
         return email_data
     except IndexError as e:
         fetch_emails_logger.error(
-            PARSING_MAIL_LOGGER_ERROR_MESSAGE, email_id, str(e)
+            PARSING_MAIL_LOGGER_ERROR_MESSAGE, email_data, str(e)
         )
     await imap.logout()

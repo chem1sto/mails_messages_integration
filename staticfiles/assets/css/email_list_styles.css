@@ -39,6 +39,7 @@ html, body {
     background-color: #f3f3f3;
     border: 1px solid #ddd;
     margin-bottom: 10px;
+    white-space: nowrap;
 }
 #progress-bar {
     width: 0%;
@@ -47,6 +48,9 @@ html, body {
     text-align: center;
     line-height: 30px;
     color: white;
+}
+#progress-bar.checking {
+    color: black;
 }
 h1 {
     text-align: center;

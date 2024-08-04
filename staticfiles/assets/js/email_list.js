@@ -12,6 +12,8 @@ $(document).ready(function() {
     ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
     let totalEmails = 0;
     let loadedEmails = 0;
+    let checkedEmails = 0;
+    let loadingStarted = false;
 
     ws.onopen = () => {
         console.log("WebSocket connection opened");
@@ -23,8 +25,9 @@ $(document).ready(function() {
         const data = JSON.parse(event.data);
         if (data.type === "total_emails") {
             totalEmails = data.total;
-            updateProgressBar(loadedEmails, totalEmails);
+            updateProgressBar(loadedEmails, checkedEmails, totalEmails);
         } else if (data.type === "new_email") {
+            loadingStarted = true;
             const email = data.email_data;
             const row = $("<tr>");
             row.append($("<td>").text(email.subject));
@@ -41,7 +44,6 @@ $(document).ready(function() {
                     })
                 )
             );
-            row.append(fromCell);
             row.append(fromCell);
             row.append($("<td>").addClass("centered").text(email.date));
             row.append($("<td>").addClass("centered").text(email.received));
@@ -60,7 +62,10 @@ $(document).ready(function() {
             row.append(attachmentsCell);
             $("#email-table tbody").append(row);
             loadedEmails++;
-            updateProgressBar(loadedEmails, totalEmails);
+            updateProgressBar(loadedEmails, checkedEmails, totalEmails);
+        } else if (data.type === "progress") {
+            checkedEmails = data.checked;
+            updateProgressBar(loadedEmails, checkedEmails, totalEmails);
         } else if (data.type === "error") {
             $("#error-message").text(data.message);
         }
@@ -74,10 +79,15 @@ $(document).ready(function() {
         console.log("WebSocket connection closed");
     };
 
-    function updateProgressBar(loaded, total) {
-        const progress = (loaded / total) * 100;
-        $("#progress-bar").width(`${progress}%`);
-        $("#progress-bar").text(`${progress.toFixed(2)}%`);
+    function updateProgressBar(loaded, checked, total) {
+        if (loadingStarted) {
+            $("#progress-bar").removeClass("checking");
+            $("#progress-bar").width(`${(loaded / total) * 100}%`);
+            $("#progress-bar").text(`Загружено писем: ${loaded}/${total}`);
+        } else {
+            $("#progress-bar").addClass("checking");
+            $("#progress-bar").text(`Проверено писем: ${checked}/${total}`);
+        }
     }
 });
 
