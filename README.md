@@ -27,6 +27,8 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
 - Daphne
 
 ## Как запустить проект
+
+### Запуск проекта в dev-режиме
 1. Клонировать репозиторий и перейти в него в командной строке:
     ```bash
     git clone git@github.com:chem1sto/test_mails_messages_integration.git
@@ -49,7 +51,7 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
    python3 -m pip install --upgrade pip
    pip install -r requirements.txt
    ```
-4. Создайте переменные окружения в основной папке проекта "empty_project"
+4. Создайте переменные окружения в основной папке проекта
     ```bash
     touch .env
     ```
@@ -73,19 +75,17 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
     DB_HOST="Хост базы данных"
     DB_PORT="Порт хоста базы данных"
     ```
-
-### Запуск проекта в dev-режиме
-1. Убедитесь, что docker установлен:
+7. Убедитесь, что docker установлен:
     ```bash
    docker --version
     ```
     Инструмент Docker engine можно установить с [этого официального сайта](https://docs.docker.com/engine/install/)
-2. Скачайте образ Redis и запустите контейнер:
+8. Скачайте образ Redis и запустите контейнер:
    ```bash
    docker pull redis:latest
    docker run -d --name redis -p 6379:6379 redis:latest
    ```
-3. Для запуска проекта перейдите в папку с файлом manage.py и выполните команды:
+9. Для запуска проекта перейдите в папку с файлом manage.py и выполните команды:
    ```bash
    cd ../test_mails_messages_integration/src/ &&
    python manage.py makemigrations &&
@@ -93,6 +93,52 @@ yandex.ru, mail.ru. Для подключения к почтовому серв
    python manage.py collectstatic --noinput
    python manage.py runserver
    ```
+
+### Локальный запуск проекта в Docker контейнерах
+1. Перейдите из папки проекта в папку nginx/ssl и создайте самоподписанный
+SSL-сертификат для Nginx, например, с помощью OpenSSL:
+    ```bash
+    cd ./nginx/ssl/ &&
+    openssl genpkey -algorithm RSA -out nginx.key &&
+    openssl req -new -key nginx.key -out localhost.csr &&
+    openssl x509 -req -days 365 -in localhost.csr -signkey nginx.key -out localhost.crt
+    ```
+    При создании запроса на подпись сертификата укажите в качестве Common Name
+(CN) локальный сервер localhost.
+2. Убедитесь, что docker и docker-compose установлен:
+    ```bash
+   docker compose --version
+    ```
+    Инструмент Docker engine можно установить с [этого официального сайта](https://docs.docker.com/engine/install/)
+    Плагин Docker compose можно установить с [этого официального сайта](https://docs.docker.com/compose/install/linux/)
+3. Перейдите обратно в основную папку проекта:
+    ```bash
+    cd ../..
+    ```
+4. Убедитесь, что в вашем файле .env корректные значения для переменных:
+    ```
+    DEBUG=False
+    ALLOWED_HOSTS=127.0.0.1, localhost
+    SECRET_KEY="Секретный код Django"
+    REDIS_HOSTS=redis, 6379
+    DB_NAME="Название базы данных"
+    POSTGRES_USER="Пользователь базы данных"
+    POSTGRES_PASSWORD="Пароль пользователя"
+    DB_HOST="Хост базы данных"
+    ```
+5. Убедитесь, что в вашем файле .env.db корректные значения для переменных:
+    ```
+    DB_ENGINE="backend django для работы с PostgreSQL"
+    DB_NAME="Название базы данных"
+    POSTGRES_USER="Пользователь базы данных"
+    POSTGRES_PASSWORD="Пароль пользователя"
+    DB_HOST="Хост базы данных"
+    DB_PORT="Порт хоста базы данных"
+    ```
+6. Запустите конфигурационный файл Docker Compose проекта
+    ```bash
+    docker compose -f ../empty_project/infra/docker-compose.yml up
+    ```
 
 ## Автор
 [Васильев Владимир](https://github.com/chem1sto)
