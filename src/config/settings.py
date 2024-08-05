@@ -145,7 +145,6 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
@@ -168,7 +167,7 @@ LOGGING = {
         },
         "save_email_to_db": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "DEBUG",
             "propagate": True,
         },
     },
