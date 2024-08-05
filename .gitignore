@@ -120,3 +120,6 @@ static/
 
 # attachments
 attachments/
+
+# Nginx SSL certificates
+nginx/ssl
