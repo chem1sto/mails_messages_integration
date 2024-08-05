@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 from datetime import datetime, timedelta
 from typing import Any, Coroutine
 
@@ -40,7 +41,6 @@ from core.constants import (
     UNSUPPORTED_ACTION_ERROR_MESSAGE,
     UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE,
 )
-from core.logging_config import setup_consumer_logging
 from email_account.models import EmailAccount
 from mail_recipient.fetch_emails import (
     check_email,
@@ -48,7 +48,7 @@ from mail_recipient.fetch_emails import (
     read_email,
 )
 
-consumer_logger = setup_consumer_logging()
+consumer_logger = logging.getLogger("consumer")
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):

@@ -142,15 +142,12 @@ LOGGING = {
         "verbose": {
             "format": "%(asctime)s %(levelname)s [%(module)s:%(lineno)d] %(message)s",
         },
-        "simple": {
-            "format": "%(levelname)s %(message)s",
-        },
     },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "simple",
+            "formatter": "verbose",
         },
     },
     "loggers": {

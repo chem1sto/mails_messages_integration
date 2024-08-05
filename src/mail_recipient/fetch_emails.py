@@ -1,5 +1,6 @@
 """Модуль fetch_emails."""
 
+import logging
 from datetime import datetime
 from email import policy
 from email.parser import BytesParser
@@ -37,13 +38,12 @@ from core.constants import (
     SUBJECT,
     TEXT,
 )
-from core.logging_config import setup_fetch_emails_logging
 from core.utils import extract_text_from_message, get_attachments_from_message
 from email_account.models import EmailAccount
 from mail_recipient.models import Email
 from mail_recipient.save_email import save_email
 
-fetch_emails_logger = setup_fetch_emails_logging()
+fetch_emails_logger = logging.getLogger("fetch_emails")
 
 
 async def connect_and_get_emails(
