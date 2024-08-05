@@ -8,7 +8,7 @@ $(document).ready(function() {
         return;
     }
 
-    ws = new WebSocket(`ws://${window.location.host}/ws/email_list/`);
+    ws = new WebSocket(`wss://${window.location.host}/ws/email_list/`);
     let totalEmails = 0;
     let loadedEmails = 0;
     let checkedEmails = 0;
