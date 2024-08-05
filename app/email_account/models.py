@@ -1,8 +1,7 @@
 """Модель EmailAccount."""
 
-from django.db import models
-
 from core.constants import EmailAccountConfig
+from django.db import models
 
 
 class EmailAccount(models.Model):

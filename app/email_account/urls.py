@@ -14,7 +14,6 @@ URL-адреса:
 """
 
 from django.urls import path, re_path
-
 from email_account.views import add_email_account
 from mail_recipient.views import download_file, email_list
 
@@ -22,6 +21,8 @@ urlpatterns = [
     path("", add_email_account, name="add_email_account"),
     path("email_list/", email_list, name="email_list"),
     re_path(
-        r"^attachments/(?P<filename>.*)$", download_file, name="download_file"
+        r"^app/attachments/(?P<filename>.*)$",
+        download_file,
+        name="download_file",
     ),
 ]

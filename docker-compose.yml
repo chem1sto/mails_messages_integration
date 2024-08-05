@@ -23,6 +23,7 @@ services:
     env_file: .env
     volumes:
       - static:/app/static
+      - attachments:/app/attachments
     depends_on:
       - db
       - redis
@@ -42,6 +43,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - static:/app/static
+      - attachments:/app/attachments
     ports:
       - "80:80"
       - "443:443"
@@ -51,6 +53,7 @@ services:
       - backend
 
 volumes:
+  attachments:
   postgres_data:
   static:
 

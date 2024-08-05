@@ -3,9 +3,8 @@
 import os
 from pathlib import Path
 
-from decouple import config
-
 from core.utils import cast_redis_hosts
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -125,7 +124,7 @@ STATICFILES_DIRS = [
     os.path.join(Path(__file__).resolve().parent.parent.parent, "staticfiles"),
 ]
 
-ATTACHMENTS_URL = "/attachments/"
+ATTACHMENTS_URL = "app/attachments/"
 ATTACHMENTS_ROOT = os.path.join(BASE_DIR, "attachments")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

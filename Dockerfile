@@ -6,5 +6,6 @@ RUN apt-get update && apt-get install -y git libpq-dev gcc && rm -rf /var/lib/ap
 COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-COPY src/ /app/
+COPY app/ /app/
 COPY staticfiles/ /staticfiles/
+VOLUME /app/attachments

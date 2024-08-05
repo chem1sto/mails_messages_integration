@@ -1,7 +1,5 @@
 """Представления для приложения email_account."""
 
-from django.shortcuts import redirect, render
-
 from core.constants import (
     ADD_EMAIL_ACCOUNT_HTML,
     EMAIL,
@@ -10,6 +8,7 @@ from core.constants import (
     PASSWORD,
     REQUEST_METHOD,
 )
+from django.shortcuts import redirect, render
 from email_account.forms import EmailAccountForm
 from email_account.models import EmailAccount
 

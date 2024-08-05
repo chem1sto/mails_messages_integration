@@ -7,9 +7,6 @@ ALL_EMAILS_ID_RECEIVED_LOGGER_INFO = (
     "Получены идентификаторы всех электронных писем и обновлен прогресс-бар"
 )
 AT = "@"
-ATTACHMENT_FILE_PATH = "src/attachments/"
-ATTACHMENT_URL_PATH = "http://{host}:{port}/attachments/{filename}"
-ATTACHMENTS_FOR_URL = "attachments/"
 ATTACHMENTS = "attachments"
 BAD = "BAD"
 BS4_PARSER = "html.parser"
@@ -89,7 +86,6 @@ SAVE_EMAIL_TO_DB_SUCCESS = (
 )
 SEARCH_MAILS_ERROR_MESSAGE = "Ошибка при поиске писем"
 SEARCH_MAILS_LOGGER_ERROR_MESSAGE = "Ошибка при поиске писем: %s"
-SERVER = "server"
 SELECT_INBOX_ERROR_MESSAGE = "Ошибка при выборе почтового ящика"
 SELECT_INBOX_LOGGER_ERROR_MESSAGE = "Ошибка при выборе почтового ящика: %s"
 SUBJECT = "subject"

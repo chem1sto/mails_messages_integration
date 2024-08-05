@@ -4,13 +4,7 @@ import logging
 import os
 
 from asgiref.sync import sync_to_async
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
-
 from core.constants import (
-    ATTACHMENT_FILE_PATH,
-    ATTACHMENT_URL_PATH,
-    ATTACHMENTS_FOR_URL,
     CONTENT,
     DATE,
     FILENAME,
@@ -26,6 +20,9 @@ from core.constants import (
     AttachmentConfig,
 )
 from core.utils import generate_subfolder_name, sanitize_and_truncate_filename
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from email_account.models import EmailAccount
 from mail_recipient.models import Attachment, Email
 
@@ -36,8 +33,6 @@ async def save_email(
     email: Email,
     attachments: list,
     email_account: EmailAccount,
-    host: str,
-    port: str,
 ) -> tuple[Email, list]:
     """
     Сохранение электронного письма в БД и на локальном диске.
@@ -80,7 +75,7 @@ async def save_email(
                 - sum(
                     len(obj)
                     for obj in [
-                        ATTACHMENT_FILE_PATH,
+                        settings.ATTACHMENTS_URL,
                         email_account.email,
                         subfolder,
                     ]
@@ -90,7 +85,7 @@ async def save_email(
                 attachment[FILENAME], max_length=safe_filename_max_length
             )
             file_path = os.path.join(
-                ATTACHMENT_FILE_PATH,
+                settings.ATTACHMENTS_URL,
                 email_account.email,
                 subfolder,
                 safe_filename,
@@ -108,14 +103,7 @@ async def save_email(
                 url=file_url,
             )
             attachments_with_url.append(
-                {
-                    FILENAME: safe_filename,
-                    URL: ATTACHMENT_URL_PATH.format(
-                        host=host,
-                        port=port,
-                        filename=file_path.split(ATTACHMENTS_FOR_URL)[1],
-                    ),
-                }
+                {FILENAME: safe_filename, URL: file_url}
             )
             save_email_to_db_logger.info(
                 SAVE_EMAIL_ATTACHMENTS_TO_DB_SUCCESS,

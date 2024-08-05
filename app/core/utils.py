@@ -6,7 +6,6 @@ from typing import Any
 
 import chardet
 from bs4 import BeautifulSoup
-
 from core.constants import (
     BS4_PARSER,
     CONTENT,

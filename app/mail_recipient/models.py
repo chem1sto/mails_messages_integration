@@ -1,8 +1,7 @@
 """Модель Email."""
 
-from django.db import models
-
 from core.constants import ATTACHMENTS, AttachmentConfig, EmailConfig
+from django.db import models
 
 # from mail_recipient.custom_storage import CustomStorage
 

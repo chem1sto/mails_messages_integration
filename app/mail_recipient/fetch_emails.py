@@ -7,7 +7,6 @@ from email.parser import BytesParser
 from typing import Tuple
 
 import aioimaplib
-
 from core.constants import (
     ALL,
     AT,
@@ -146,8 +145,6 @@ async def read_email(
     imap: aioimaplib.IMAP4_SSL,
     email_account: EmailAccount,
     email_data: list[bytes, bytearray, bytes, bytes],
-    host: str,
-    port: str,
 ) -> dict[str, str | list]:
     """
     Чтение и обработка данных электронного письма.
@@ -195,8 +192,6 @@ async def read_email(
             ),
             attachments=get_attachments_from_message(email_decoded_data),
             email_account=email_account,
-            host=host,
-            port=port,
         )
         email_data = {
             MESSAGE_ID: email.message_id,

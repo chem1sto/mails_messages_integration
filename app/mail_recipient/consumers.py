@@ -8,7 +8,6 @@ from typing import Any, Coroutine
 
 import aioimaplib
 from channels.generic.websocket import AsyncWebsocketConsumer
-
 from core.constants import (
     ACTION,
     ALL_EMAILS_ID_RECEIVED_LOGGER_INFO,
@@ -31,7 +30,6 @@ from core.constants import (
     MESSAGE_ID,
     NEW_EMAIL,
     PROGRESS,
-    SERVER,
     TIMEOUT_ERROR_MESSAGE,
     TIMEOUT_LOGGER_ERROR_MESSAGE,
     TOTAL,
@@ -143,14 +141,9 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                 text_data=json.dumps({TYPE: TOTAL_EMAILS, TOTAL: total_emails})
             )
             consumer_logger.info(ALL_EMAILS_ID_RECEIVED_LOGGER_INFO)
-            host, port = self.scope[SERVER]
             self.fetch_task = asyncio.create_task(
                 self.process_email(
-                    imap=imap,
-                    email_account=email_account,
-                    emails_id=emails_id,
-                    host=host,
-                    port=port,
+                    imap=imap, email_account=email_account, emails_id=emails_id
                 )
             )
         except TimeoutError:
@@ -187,8 +180,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         imap: aioimaplib.IMAP4_SSL,
         email_account: EmailAccount,
         emails_id: list,
-        host: str,
-        port: str,
     ) -> None:
         """
         Обрабатывает и отправляет данные электронных писем клиенту.
@@ -223,8 +214,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
                     imap=imap,
                     email_account=email_account,
                     email_data=checked_email_data,
-                    host=host,
-                    port=port,
                 )
                 await self.send(
                     text_data=json.dumps(

@@ -13,6 +13,7 @@ repos:
   rev: 7.1.0
   hooks:
     - id: flake8
+      args: [--exclude=__init__.py]
       additional_dependencies:
         - flake8-docstrings
 - repo: https://github.com/ambv/black

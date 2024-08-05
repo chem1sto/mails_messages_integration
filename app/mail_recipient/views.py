@@ -2,11 +2,10 @@
 
 import os
 
+from core.constants import EMAIL_LIST_HTML, FILE_NOT_FOUND
 from django.conf import settings
 from django.http import FileResponse, Http404
 from django.shortcuts import render
-
-from core.constants import EMAIL_LIST_HTML, FILE_NOT_FOUND
 
 
 def email_list(request):

@@ -1,9 +1,8 @@
 """Форма для ввода email и пароля."""
 
+from core.constants import EMAIL, PASSWORD, EmailAccountFormConfig
 from django import forms
 from django.core.validators import MinLengthValidator
-
-from core.constants import EMAIL, PASSWORD, EmailAccountFormConfig
 from email_account.models import EmailAccount
 
 
