@@ -137,7 +137,7 @@ SSL-сертификат для Nginx, например, с помощью OpenS
     ```
 6. Запустите конфигурационный файл Docker Compose проекта
     ```bash
-    docker compose -f ../empty_project/infra/docker-compose.yml up
+    docker compose up --build
     ```
 
 ## Автор
