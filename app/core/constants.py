@@ -100,6 +100,7 @@ TIMEOUT_LOGGER_ERROR_MESSAGE = (
 TOTAL_EMAILS = "total_emails"
 TOTAL = "total"
 TYPE = "type"
+UNEXPECTED_ERROR_MESSAGE = "Произошла неожиданная ошибка: %s"
 UNEXPECTED_LOGGER_ERROR_MESSAGE = "Произошла неожиданная ошибка: %s"
 UNSUPPORTED_ACTION_ERROR_MESSAGE = "Неподдерживаемое действие: %s"
 UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE = (

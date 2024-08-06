@@ -8,7 +8,8 @@ $(document).ready(function() {
         return;
     }
 
-    ws = new WebSocket(`wss://${window.location.host}/ws/email_list/`);
+    const webSocketProtocol = window.location.protocol.includes('https') ? 'wss' : 'ws';
+    ws = new WebSocket(`${webSocketProtocol}://${window.location.host}/ws/email_list/`);
     let totalEmails = 0;
     let loadedEmails = 0;
     let checkedEmails = 0;

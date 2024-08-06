@@ -36,6 +36,7 @@ from core.constants import (
     TOTAL,
     TOTAL_EMAILS,
     TYPE,
+    UNEXPECTED_ERROR_MESSAGE,
     UNEXPECTED_LOGGER_ERROR_MESSAGE,
     UNSUPPORTED_ACTION_ERROR_MESSAGE,
     UNSUPPORTED_ACTION_LOGGER_ERROR_MESSAGE,
@@ -228,6 +229,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             consumer_logger.error(
                 UNEXPECTED_LOGGER_ERROR_MESSAGE, str(e), exc_info=True
             )
+            raise Exception(UNEXPECTED_ERROR_MESSAGE, str(e))
         finally:
             consumer_logger.info(
                 FETCH_EMAILS_COMPLETE_LOGGER_MESSAGE,
