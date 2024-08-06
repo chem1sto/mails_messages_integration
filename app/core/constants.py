@@ -17,6 +17,7 @@ CHECKED_EMAIL_LOGGER_INFO_MESSAGE = "Проверено письмо с id %s"
 CLOSE_CONNECTION = "close_connection"
 CONTENT = "content"
 CONTENT_DISPOSITION = "Content-Disposition"
+CONSUMER = "consumer"
 CURRENT_GMT = 3
 DATE = "date"
 DATETIME_FORMAT = "%a, %d %b %Y %H:%M:%S %z"

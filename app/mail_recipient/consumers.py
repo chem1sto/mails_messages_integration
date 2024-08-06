@@ -14,6 +14,7 @@ from core.constants import (
     CHECKED,
     CHECKED_EMAIL_LOGGER_INFO_MESSAGE,
     CLOSE_CONNECTION,
+    CONSUMER,
     CURRENT_GMT,
     EMAIL,
     EMAIL_ACCOUNT_NOT_FOUND_ERROR_MESSAGE,
@@ -46,7 +47,7 @@ from mail_recipient.fetch_emails import (
     read_email,
 )
 
-consumer_logger = logging.getLogger("consumer")
+consumer_logger = logging.getLogger(CONSUMER)
 
 
 class EmailListConsumer(AsyncWebsocketConsumer):
@@ -90,8 +91,8 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         """
         Обрабатывает входящие сообщения от клиента.
 
-        Этот метод вызывается при получении сообщения от клиента.
-        Он обрабатывает сообщение, проверяет наличие необходимых данных и
+        Этот метод вызывается при получении сообщения от клиента. Он
+        обрабатывает сообщение, проверяет наличие необходимых данных и
         выполняет соответствующие действия, такие как получение списка
         электронных писем.
 
@@ -101,7 +102,7 @@ class EmailListConsumer(AsyncWebsocketConsumer):
         используются в этом методе).
 
         Возвращает:
-            Coroutine[Any, Any, None]: Асинхронная корутина.
+            None: Ничего не возвращает.
 
         Вызывает ошибку:
             ValueError: Если действие не поддерживается, email не указан или
@@ -191,8 +192,6 @@ class EmailListConsumer(AsyncWebsocketConsumer):
             imap: Объект IMAP-соединения.
             email_account: Учетная запись электронной почты.
             emails_id: Список идентификаторов электронных писем.
-            host: Хост сервера.
-            port: Порт сервера.
         """
         try:
             checked_emails_data = []
