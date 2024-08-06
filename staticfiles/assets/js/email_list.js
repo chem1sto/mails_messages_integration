@@ -81,7 +81,7 @@ $(document).ready(function() {
         if (loadingStarted) {
             $("#progress-bar").removeClass("checking");
             $("#progress-bar").width(`${(loaded / total) * 100}%`);
-            $("#progress-bar").text(`Загружено писем: ${loaded}/${total}`);
+            $("#progress-bar").text(`Загружено писем: ${total - loaded}`);
         } else {
             $("#progress-bar").addClass("checking");
             $("#progress-bar").text(`Проверено писем: ${checked}/${total}`);
