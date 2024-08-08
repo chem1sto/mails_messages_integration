@@ -110,6 +110,7 @@ SSL-сертификат для Nginx, например, с помощью OpenS
    docker compose --version
     ```
     Инструмент Docker engine можно установить с [этого официального сайта](https://docs.docker.com/engine/install/)
+
     Плагин Docker compose можно установить с [этого официального сайта](https://docs.docker.com/compose/install/linux/)
 3. Перейдите обратно в основную папку проекта:
     ```bash
